@@ -9,45 +9,31 @@ export function Achievements() {
   const achievements = [
     {
       icon: Trophy,
-      title: 'First Place - Smart India Hackathon 2024',
-      description: 'Led a team of 6 to develop an AI-powered healthcare solution that won first place in the national competition. Our solution focused on early disease detection using machine learning algorithms.',
-      year: '2024',
+      title: 'SIH\'25 Grand Finalist',
+      description: 'Smart India Hackathon 2025 Grand Finalist - Competed at the national level with innovative solutions addressing real-world problems using cutting-edge technology and AI/ML approaches.',
+      year: '2025',
       category: 'Competition'
-    },
-    {
-      icon: Award,
-      title: 'Google Code Jam - Round 3 Qualifier',
-      description: 'Ranked in top 500 globally in competitive programming. Solved complex algorithmic problems under time pressure, demonstrating strong problem-solving skills.',
-      year: '2024',
-      category: 'Programming'
     },
     {
       icon: Star,
-      title: 'Best Innovation Award',
-      description: 'Inter-college tech fest recognition for developing a blockchain-based voting system that ensures transparency and security in digital elections.',
-      year: '2023',
-      category: 'Innovation'
-    },
-    {
-      icon: Target,
-      title: 'ACM ICPC Regional Finalist',
-      description: 'Competed at regional level in prestigious programming contest. Collaborated with team members to solve challenging algorithmic problems.',
-      year: '2023',
-      category: 'Competition'
-    },
-    {
-      icon: Trophy,
-      title: 'MLH Fellowship',
-      description: 'Selected for Major League Hacking Open Source Fellowship. Contributed to major open source projects and collaborated with developers worldwide.',
-      year: '2023',
-      category: 'Fellowship'
+      title: 'Dept. Rank 5 as of 2 semesters',
+      description: 'Achieved Department Rank 5 in Mathematics & Computing at DTU with a CGPA of 9.5/10.0, demonstrating consistent academic excellence and strong foundation in mathematical and computational concepts.',
+      year: '2024',
+      category: 'Academic'
     },
     {
       icon: Award,
-      title: 'Dean\'s List Recognition',
-      description: 'Academic excellence award for maintaining 9.2+ GPA throughout multiple semesters. Recognized for consistent high performance in Mathematics & Computing.',
-      year: '2022-2024',
-      category: 'Academic'
+      title: 'Ex Research Intern @AIMS-DTU',
+      description: 'Former Research Intern at AIMS-DTU (AI & Machine Learning Society) where I contributed to cutting-edge research in artificial intelligence, machine learning, and computer vision applications.',
+      year: '2024',
+      category: 'Research'
+    },
+    {
+      icon: Target,
+      title: 'Super Contributor Hacktoberfest\'25',
+      description: 'Recognized as Super Contributor in Hacktoberfest 2025 for exceptional contributions to open source projects, demonstrating commitment to collaborative development and community building.',
+      year: '2025',
+      category: 'Open Source'
     }
   ];
 

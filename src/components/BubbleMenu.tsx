@@ -59,9 +59,9 @@ const DEFAULT_ITEMS: MenuItem[] = [
     hoverStyles: { bgColor: '#ffffff', textColor: '#000000' }
   },
   {
-    label: 'recognition',
-    href: '#recognition',
-    ariaLabel: 'Recognition',
+    label: 'achievements',
+    href: '#achievements',
+    ariaLabel: 'Achievements',
     rotation: -8,
     hoverStyles: { bgColor: '#ffffff', textColor: '#000000' }
   },
