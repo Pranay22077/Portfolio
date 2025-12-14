@@ -145,10 +145,7 @@ export function Contact() {
             </div>
           </div>
 
-          {/* Footer */}
-          <div className="mt-32 pt-8 border-t border-white/10 text-center text-sm text-gray-500">
-            <p>© 2024 Alex Johnson. Built with React & Motion.</p>
-          </div>
+
         </motion.div>
       </div>
     </section>
