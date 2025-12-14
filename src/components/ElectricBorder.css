@@ -1,6 +1,6 @@
 .electric-border {
   --electric-light-color: oklch(from var(--electric-border-color) l c h);
-  --eb-border-width: 1px;
+  --eb-border-width: 2px;
   position: relative;
   border-radius: inherit;
   overflow: visible;
@@ -46,25 +46,24 @@
 
 .eb-stroke {
   border: var(--eb-border-width) solid var(--electric-border-color);
-  opacity: 0.8;
 }
 
 .eb-glow-1 {
-  border: var(--eb-border-width) solid var(--electric-border-color);
-  opacity: 0.6;
-  filter: blur(calc(1px + (var(--eb-border-width) * 0.5)));
+  border: var(--eb-border-width) solid oklch(from var(--electric-border-color) l c h / 0.6);
+  opacity: 0.5;
+  filter: blur(calc(0.5px + (var(--eb-border-width) * 0.25)));
 }
 
 .eb-glow-2 {
-  border: var(--eb-border-width) solid var(--electric-border-color);
-  opacity: 0.4;
-  filter: blur(calc(2px + (var(--eb-border-width) * 1)));
+  border: var(--eb-border-width) solid var(--electric-light-color);
+  opacity: 0.5;
+  filter: blur(calc(2px + (var(--eb-border-width) * 0.5)));
 }
 
 .eb-background-glow {
   z-index: -1;
-  transform: scale(1.06);
-  filter: blur(20px);
+  transform: scale(1.08);
+  filter: blur(32px);
   opacity: 0.3;
-  background: radial-gradient(ellipse at center, var(--electric-border-color), transparent 70%);
+  background: linear-gradient(-30deg, var(--electric-light-color), transparent, var(--electric-border-color));
 }
