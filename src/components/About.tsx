@@ -1,106 +1,98 @@
 import { motion } from 'framer-motion';
 import { useInView } from './useInView';
 import { Code2, Cpu, Lightbulb } from 'lucide-react';
-import GradualBlur from './GradualBlur';
+import LaserFlow from './LaserFlow';
 
 export function About() {
   const { ref, isInView } = useInView();
 
-  const highlights = [
-    {
-      icon: Code2,
-      title: 'Clean Code',
-      description: 'Writing maintainable and efficient code following best practices',
-    },
-    {
-      icon: Cpu,
-      title: 'Problem Solver',
-      description: 'Analytical thinking to tackle complex algorithmic challenges',
-    },
-    {
-      icon: Lightbulb,
-      title: 'Quick Learner',
-      description: 'Adaptable to new technologies and frameworks rapidly',
-    },
-  ];
-
   return (
-    <section id="about" className="relative py-32 px-6" ref={ref}>
-      <GradualBlur
-        target="parent"
-        position="top"
-        height="6rem"
-        strength={1.5}
-        divCount={5}
-        curve="ease-out"
-        opacity={1}
-      />
+    <section id="about" className="relative py-0" ref={ref}>
+      {/* LaserFlow Effect - Starts below LET'S CONNECT button */}
+      <div className="relative h-screen mt-54 z-20">
+        <LaserFlow 
+          horizontalBeamOffset={0.1}
+          verticalBeamOffset={0.0}
+          color="#d32aacff"
+          wispDensity={1.2}
+          fogIntensity={0.6}
+          wispIntensity={6.0}
+          flowSpeed={0.4}
+        />
+      </div>
       
-      <div className="max-w-6xl mx-auto relative z-10">
+      {/* Content Box positioned seamlessly at laser beam end - no gap */}
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-6" style={{marginTop: '-350px'}}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8 }}
+          className="relative z-10"
         >
-          <div className="mb-16">
-            <span className="text-sm tracking-widest text-gray-500 mb-4 block">01 / ABOUT</span>
-            <h2 className="text-5xl md:text-6xl mb-6">Who I Am</h2>
-            <div className="w-20 h-px bg-white/20" />
+        <div className="bg-black/80 backdrop-blur-lg border-2 border-white/30 rounded-3xl p-12 text-center">
+          <span className="text-sm tracking-widest text-gray-400 mb-4 block">01 / ABOUT</span>
+          <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white">Who I Am</h2>
+          <div className="w-20 h-px bg-white/40 mx-auto mb-8" />
+          
+          <div className="space-y-6 text-gray-300 leading-relaxed text-lg max-w-3xl mx-auto">
+            <p>
+              I'm a third-year BTech student majoring in <span className="text-white font-semibold">Computer Science</span>, driven by a passion for
+              technology and innovation. My journey in programming started in high school, and since
+              then, I've been captivated by the endless possibilities of software development.
+            </p>
+            <p>
+              Currently, I'm focusing on <span className="text-white font-semibold">full-stack web development</span> and <span className="text-white font-semibold">machine learning</span>, working on
+              projects that solve real-world problems. I believe in continuous learning and staying
+              updated with the latest industry trends.
+            </p>
+            <p>
+              Beyond coding, I'm an active participant in <span className="text-white font-semibold">hackathons</span> and <span className="text-white font-semibold">coding competitions</span>,
+              constantly challenging myself to think creatively and work efficiently under pressure.
+            </p>
+          </div>
+          
+          <div className="flex flex-wrap justify-center gap-4 mt-10">
+            <span className="px-6 py-3 bg-white/10 rounded-full text-sm border border-white/20 hover:bg-white/20 transition-colors">Full-Stack Development</span>
+            <span className="px-6 py-3 bg-white/10 rounded-full text-sm border border-white/20 hover:bg-white/20 transition-colors">Machine Learning</span>
+            <span className="px-6 py-3 bg-white/10 rounded-full text-sm border border-white/20 hover:bg-white/20 transition-colors">Problem Solving</span>
+            <span className="px-6 py-3 bg-white/10 rounded-full text-sm border border-white/20 hover:bg-white/20 transition-colors">Open Source</span>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12 mb-16">
-            <div className="space-y-6 text-gray-400 leading-relaxed">
-              <p>
-                I'm a third-year BTech student majoring in Computer Science, driven by a passion for
-                technology and innovation. My journey in programming started in high school, and since
-                then, I've been captivated by the endless possibilities of software development.
-              </p>
-              <p>
-                Currently, I'm focusing on full-stack web development and machine learning, working on
-                projects that solve real-world problems. I believe in continuous learning and staying
-                updated with the latest industry trends.
-              </p>
-            </div>
-
-            <div className="space-y-6 text-gray-400 leading-relaxed">
-              <p>
-                Beyond coding, I'm an active participant in hackathons and coding competitions,
-                constantly challenging myself to think creatively and work efficiently under pressure.
-              </p>
-              <p>
-                When I'm not coding, you'll find me contributing to open-source projects, reading tech
-                blogs, or exploring new frameworks and tools to expand my skill set.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {highlights.map((item, index) => (
+          {/* Highlights integrated into the same box */}
+          <div className="grid md:grid-cols-3 gap-6 mt-12 pt-8 border-t border-white/20">
+            {[
+              {
+                icon: Code2,
+                title: 'Clean Code',
+                description: 'Writing maintainable and efficient code following best practices',
+              },
+              {
+                icon: Cpu,
+                title: 'Problem Solver',
+                description: 'Analytical thinking to tackle complex algorithmic challenges',
+              },
+              {
+                icon: Lightbulb,
+                title: 'Quick Learner',
+                description: 'Adaptable to new technologies and frameworks rapidly',
+              },
+            ].map((item, index) => (
               <motion.div
                 key={item.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="border border-white/20 p-8 hover:border-white/50 transition-all group backdrop-blur-sm bg-black/30"
+                transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
+                className="text-center group"
               >
-                <item.icon className="w-8 h-8 mb-4 group-hover:scale-110 transition-transform" />
-                <h3 className="text-xl mb-3">{item.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{item.description}</p>
+                <item.icon className="w-8 h-8 mb-4 mx-auto group-hover:scale-110 transition-transform text-white" />
+                <h3 className="text-xl mb-3 text-white font-semibold">{item.title}</h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{item.description}</p>
               </motion.div>
             ))}
           </div>
+        </div>
         </motion.div>
       </div>
-      
-      <GradualBlur
-        target="parent"
-        position="bottom"
-        height="6rem"
-        strength={1.5}
-        divCount={5}
-        curve="ease-in"
-        opacity={1}
-      />
     </section>
   );
 }
