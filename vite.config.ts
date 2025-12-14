@@ -14,6 +14,15 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     minify: 'esbuild',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          motion: ['framer-motion'],
+          utils: ['lenis', 'lucide-react', 'mathjs']
+        }
+      }
+    }
   },
   server: {
     port: 3000,

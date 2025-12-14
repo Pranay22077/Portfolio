@@ -1,15 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Modern minimalist portfolio showcasing projects, skills, and achievements in AI/ML and software development." />
+    <meta name="keywords" content="portfolio, developer, AI, ML, React, TypeScript, web development" />
+    <meta name="author" content="Pranay" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Pranay - Modern Portfolio" />
+    <meta property="og:description" content="Modern minimalist portfolio showcasing projects, skills, and achievements in AI/ML and software development." />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="Pranay - Modern Portfolio" />
+    <meta property="twitter:description" content="Modern minimalist portfolio showcasing projects, skills, and achievements in AI/ML and software development." />
+    
+    <title>Pranay - Modern Portfolio</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <!-- Inline critical CSS for faster loading -->
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { 
+        font-family: system-ui, -apple-system, sans-serif; 
+        background: #000; 
+        color: #fff; 
+        overflow-x: hidden;
+      }
+      #root { min-height: 100vh; }
+      .loading { 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        min-height: 100vh; 
+        font-size: 1.2rem; 
+      }
+    </style>
+  </head>
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Modern Black and White Portfolio</title>
-    </head>
-
-    <body>
-      <div id="root"></div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
-  
+  <body>
+    <div id="root">
+      <div class="loading">Loading...</div>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
