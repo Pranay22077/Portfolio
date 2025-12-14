@@ -19,7 +19,7 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-dom'],
           motion: ['framer-motion'],
-          utils: ['lenis', 'lucide-react', 'mathjs']
+          utils: ['lucide-react', 'mathjs']
         }
       }
     }
