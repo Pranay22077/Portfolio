@@ -82,8 +82,8 @@ export function Achievements() {
           <ScrollStackItem key={achievement.title}>
             <div className="text-white max-w-4xl mx-auto">
               <div className="flex items-start gap-6 mb-6">
-                <div className="achievement-icon p-4 border border-blue-400/30 rounded-lg bg-blue-500/5 flex-shrink-0">
-                  <achievement.icon className="w-8 h-8 text-blue-400" />
+                <div className="achievement-icon p-3 rounded-xl bg-gradient-to-br from-blue-500/10 to-blue-600/5 border border-blue-400/20 flex-shrink-0 hover:border-blue-400/40 transition-all duration-300">
+                  <achievement.icon className="w-7 h-7 text-blue-400" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-start justify-between mb-3">

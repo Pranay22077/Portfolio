@@ -49,19 +49,9 @@
   transform: translateY(-4px);
 }
 
+/* Disabled sliding shine effect for cleaner look */
 .chroma-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 60%);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  z-index: 2;
-}
-
-.chroma-card:hover::before {
-  opacity: 1;
+  display: none;
 }
 
 .chroma-img-wrapper {

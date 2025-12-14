@@ -8,8 +8,8 @@ export function About() {
 
   return (
     <section id="about" className="relative py-0" ref={ref}>
-      {/* LaserFlow Effect - Much longer for proper scroll timing */}
-      <div className="relative z-20" style={{height: '200vh', marginTop: '20vh'}}>
+      {/* LaserFlow Effect - Zero gap from LET'S CONNECT button */}
+      <div className="relative z-20" style={{height: '200vh', marginTop: '0'}}>
         <LaserFlow 
           horizontalBeamOffset={0.1}
           verticalBeamOffset={0.0}
