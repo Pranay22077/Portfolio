@@ -64,7 +64,7 @@ export function Achievements() {
             04 / ACHIEVEMENTS
           </span>
           <h2 className="text-5xl md:text-6xl mb-6">Recognition</h2>
-          <div className="w-20 h-px bg-white/20 mx-auto" />
+          <div className="w-20 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent mx-auto" />
         </motion.div>
       </div>
 
@@ -82,8 +82,8 @@ export function Achievements() {
           <ScrollStackItem key={achievement.title}>
             <div className="text-white max-w-4xl mx-auto">
               <div className="flex items-start gap-6 mb-6">
-                <div className="achievement-icon p-4 border border-white/30 rounded-lg bg-white/5 flex-shrink-0">
-                  <achievement.icon className="w-8 h-8" />
+                <div className="achievement-icon p-4 border border-blue-400/30 rounded-lg bg-blue-500/5 flex-shrink-0">
+                  <achievement.icon className="w-8 h-8 text-blue-400" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-start justify-between mb-3">

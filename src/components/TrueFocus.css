@@ -11,14 +11,15 @@
 
 .focus-word {
   position: relative;
-  font-size: 3rem;
-  font-weight: 900;
+  font-size: 0.875rem;
+  font-weight: 500;
   cursor: pointer;
   transition:
     filter 0.3s ease,
     color 0.3s ease;
   outline: none;
   user-select: none;
+  color: white;
 }
 
 .focus-word.active {

@@ -8,12 +8,12 @@ export function About() {
 
   return (
     <section id="about" className="relative py-0" ref={ref}>
-      {/* LaserFlow Effect - Starts below LET'S CONNECT button */}
-      <div className="relative h-screen mt-54 z-20">
+      {/* LaserFlow Effect - Much longer for proper scroll timing */}
+      <div className="relative z-20" style={{height: '200vh', marginTop: '20vh'}}>
         <LaserFlow 
           horizontalBeamOffset={0.1}
           verticalBeamOffset={0.0}
-          color="#d32aacff"
+          color="#60A5FA"
           wispDensity={1.2}
           fogIntensity={0.6}
           wispIntensity={6.0}
@@ -21,8 +21,8 @@ export function About() {
         />
       </div>
       
-      {/* Content Box positioned seamlessly at laser beam end - no gap */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-6" style={{marginTop: '-350px'}}>
+      {/* Content Box positioned seamlessly at laser beam end - complete overlap */}
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-6" style={{marginTop: '-100vh'}}>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -32,7 +32,7 @@ export function About() {
         <div className="bg-black/80 backdrop-blur-lg border-2 border-white/30 rounded-3xl p-12 text-center">
           <span className="text-sm tracking-widest text-gray-400 mb-4 block">01 / ABOUT</span>
           <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white">Who I Am</h2>
-          <div className="w-20 h-px bg-white/40 mx-auto mb-8" />
+          <div className="w-20 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent mx-auto mb-8" />
           
           <div className="space-y-6 text-gray-300 leading-relaxed text-lg max-w-3xl mx-auto">
             <p>
@@ -52,10 +52,10 @@ export function About() {
           </div>
           
           <div className="flex flex-wrap justify-center gap-4 mt-10">
-            <span className="px-6 py-3 bg-white/10 rounded-full text-sm border border-white/20 hover:bg-white/20 transition-colors">Full-Stack Development</span>
-            <span className="px-6 py-3 bg-white/10 rounded-full text-sm border border-white/20 hover:bg-white/20 transition-colors">Machine Learning</span>
-            <span className="px-6 py-3 bg-white/10 rounded-full text-sm border border-white/20 hover:bg-white/20 transition-colors">Problem Solving</span>
-            <span className="px-6 py-3 bg-white/10 rounded-full text-sm border border-white/20 hover:bg-white/20 transition-colors">Open Source</span>
+            <span className="px-6 py-3 bg-blue-500/10 rounded-full text-sm border border-blue-400/30 hover:bg-blue-500/20 transition-colors">Full-Stack Development</span>
+            <span className="px-6 py-3 bg-blue-500/10 rounded-full text-sm border border-blue-400/30 hover:bg-blue-500/20 transition-colors">Machine Learning</span>
+            <span className="px-6 py-3 bg-blue-500/10 rounded-full text-sm border border-blue-400/30 hover:bg-blue-500/20 transition-colors">Problem Solving</span>
+            <span className="px-6 py-3 bg-blue-500/10 rounded-full text-sm border border-blue-400/30 hover:bg-blue-500/20 transition-colors">Open Source</span>
           </div>
 
           {/* Highlights integrated into the same box */}

@@ -73,7 +73,7 @@ export function Projects() {
           <div className="mb-16">
             <span className="text-sm tracking-widest text-gray-500 mb-4 block">03 / PROJECTS</span>
             <h2 className="text-5xl md:text-6xl mb-6">Featured Work</h2>
-            <div className="w-20 h-px bg-white/20" />
+            <div className="w-20 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent" />
           </div>
 
           <ChromaGrid 

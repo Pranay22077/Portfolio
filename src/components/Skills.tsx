@@ -27,7 +27,7 @@ export function Skills() {
           <div className="mb-16 text-center">
             <span className="text-sm tracking-widest text-gray-500 mb-4 block">02 / SKILLS</span>
             <h2 className="text-5xl md:text-6xl mb-6">Tech Stack</h2>
-            <div className="w-20 h-px bg-white/20 mx-auto" />
+            <div className="w-20 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent mx-auto" />
           </div>
 
           <motion.div
@@ -46,7 +46,7 @@ export function Skills() {
               clickEffect={true}
               spotlightRadius={300}
               particleCount={8}
-              glowColor="255, 255, 255"
+              glowColor="96, 165, 250"
             />
           </motion.div>
         </motion.div>

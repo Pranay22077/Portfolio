@@ -1,12 +1,17 @@
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import DecryptedText from './DecryptedText';
+import TrueFocus from './TrueFocus';
+import VariableProximity from './VariableProximity';
 
 export function Hero() {
   const [text, setText] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const fullText = 'PRANAY';
   const fullSubtitle = 'AI/ML Enthusiast • Problem Solver • Mathematics & Computing Student';
+  const containerRef = useRef<HTMLDivElement>(null);
+
   
   useEffect(() => {
     let index = 0;
@@ -30,7 +35,7 @@ export function Hero() {
   }, []);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center px-6">
+    <section id="home" className="relative min-h-screen flex items-center justify-center px-6" ref={containerRef}>
       <div className="max-w-4xl mx-auto text-center z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -51,17 +56,42 @@ export function Hero() {
           </h1>
 
           <div className="space-y-6 mb-12">
-            <p className="text-xl md:text-2xl text-gray-300 min-h-[2rem]">
-              {subtitle}
-            </p>
-            <div className="flex items-center justify-center space-x-4">
-              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-white/40"></div>
-              <span className="text-white/60 text-sm font-mono">CRAFTING THE FUTURE WITH CODE</span>
-              <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-white/40"></div>
+            <div className="text-xl md:text-2xl text-gray-300 min-h-[2rem]">
+              <DecryptedText 
+                text={subtitle}
+                speed={30}
+                maxIterations={8}
+                animateOn="view"
+                className="text-cyan-400"
+                encryptedClassName="text-gray-500"
+              />
             </div>
-            <p className="text-gray-400 text-lg">
-              🎓 B.Tech Mathematics & Computing | 🚀 Open Source Contributor
-            </p>
+            <div className="flex items-center justify-center space-x-4">
+              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-cyan-400/40"></div>
+              <div className="text-white/60 text-sm font-mono">
+                <TrueFocus 
+                  sentence="CRAFTING THE FUTURE WITH CODE"
+                  separator=" "
+                  blurAmount={3}
+                  borderColor="#00bcd4"
+                  glowColor="rgba(0, 188, 212, 0.6)"
+                  animationDuration={0.8}
+                  pauseBetweenAnimations={2}
+                />
+              </div>
+              <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-cyan-400/40"></div>
+            </div>
+            <div className="text-gray-400 text-lg">
+              <VariableProximity
+                label="B.Tech Mathematics & Computing | Open Source Contributor"
+                fromFontVariationSettings="'wght' 300, 'opsz' 12"
+                toFontVariationSettings="'wght' 700, 'opsz' 20"
+                containerRef={containerRef}
+                radius={80}
+                falloff="gaussian"
+                className="text-gray-400 hover:text-cyan-300 transition-colors"
+              />
+            </div>
           </div>
 
           <div className="flex items-center justify-center gap-6 mb-16">

@@ -47,7 +47,7 @@ export function Contact() {
           <div className="mb-16">
             <span className="text-sm tracking-widest text-gray-500 mb-4 block">06 / CONTACT</span>
             <h2 className="text-5xl md:text-6xl mb-6">Get In Touch</h2>
-            <div className="w-20 h-px bg-white/20" />
+            <div className="w-20 h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent" />
           </div>
 
           <div className="grid md:grid-cols-2 gap-16">
@@ -60,8 +60,8 @@ export function Contact() {
               <div className="space-y-6 mb-12">
                 {contactInfo.map((info) => (
                   <div key={info.label} className="flex items-start gap-4">
-                    <div className="p-3 border border-white/20">
-                      <info.icon className="w-5 h-5" />
+                    <div className="p-3 border border-blue-400/30 bg-blue-500/5">
+                      <info.icon className="w-5 h-5 text-blue-400" />
                     </div>
                     <div>
                       <p className="text-sm text-gray-500 mb-1">{info.label}</p>
@@ -89,10 +89,10 @@ export function Contact() {
                       href={platform.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-3 border border-white/20 hover:bg-white/10 transition-all hover:scale-110"
+                      className="p-3 border border-blue-400/30 hover:bg-blue-500/10 transition-all hover:scale-110"
                       aria-label={platform.label}
                     >
-                      <platform.icon className="w-5 h-5" />
+                      <platform.icon className="w-5 h-5 text-blue-400" />
                     </a>
                   ))}
                 </div>
@@ -109,7 +109,7 @@ export function Contact() {
                   <input
                     type="text"
                     id="name"
-                    className="w-full bg-black/50 backdrop-blur-sm border border-white/20 px-4 py-3 focus:border-white/50 outline-none transition-all"
+                    className="w-full bg-black/50 backdrop-blur-sm border border-white/20 px-4 py-3 focus:border-blue-400/50 outline-none transition-all"
                     placeholder="Your name"
                   />
                 </div>
@@ -120,7 +120,7 @@ export function Contact() {
                   <input
                     type="email"
                     id="email"
-                    className="w-full bg-black/50 backdrop-blur-sm border border-white/20 px-4 py-3 focus:border-white/50 outline-none transition-all"
+                    className="w-full bg-black/50 backdrop-blur-sm border border-white/20 px-4 py-3 focus:border-blue-400/50 outline-none transition-all"
                     placeholder="your.email@example.com"
                   />
                 </div>
@@ -131,7 +131,7 @@ export function Contact() {
                   <textarea
                     id="message"
                     rows={5}
-                    className="w-full bg-black/50 backdrop-blur-sm border border-white/20 px-4 py-3 focus:border-white/50 outline-none transition-all resize-none"
+                    className="w-full bg-black/50 backdrop-blur-sm border border-white/20 px-4 py-3 focus:border-blue-400/50 outline-none transition-all resize-none"
                     placeholder="Your message..."
                   />
                 </div>
