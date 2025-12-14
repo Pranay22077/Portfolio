@@ -7,30 +7,8 @@ import { Education } from './components/Education';
 import { Contact } from './components/Contact';
 import { Navigation } from './components/Navigation';
 import SimpleStars from './components/SimpleStars';
-import { useEffect } from 'react';
-import Lenis from 'lenis';
 
 export default function App() {
-  useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      touchMultiplier: 2,
-    });
-
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-
-    requestAnimationFrame(raf);
-
-    return () => {
-      lenis.destroy();
-    };
-  }, []);
-
   return (
     <div className="relative bg-black text-white overflow-x-hidden">
       {/* Simple Stars Background */}

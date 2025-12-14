@@ -70,12 +70,11 @@ export function Achievements() {
 
       {/* ScrollStack using window scroll */}
       <ScrollStack
-        itemDistance={120}
-        itemScale={0.04}
-        itemStackDistance={40}
-        stackPosition="25%"
-        scaleEndPosition="15%"
-        baseScale={0.92}
+        itemDistance={100}
+        itemScale={0.05}
+        itemStackDistance={30}
+        stackPosition="30%"
+        baseScale={0.9}
         useWindowScroll={true}
         className="scroll-stack-achievements"
       >
