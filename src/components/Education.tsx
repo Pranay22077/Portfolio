@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { useInView } from './useInView';
 import { GraduationCap, BookOpen, Code } from 'lucide-react';
 import GradualBlur from './GradualBlur';

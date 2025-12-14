@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { useInView } from './useInView';
 import { Trophy, Award, Target, Star } from 'lucide-react';
 import ScrollStack, { ScrollStackItem } from './ScrollStack';

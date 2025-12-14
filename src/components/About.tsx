@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { useInView } from './useInView';
 import { Code2, Cpu, Lightbulb } from 'lucide-react';
 import GradualBlur from './GradualBlur';

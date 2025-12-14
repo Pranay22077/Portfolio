@@ -1,4 +1,4 @@
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { useInView } from './useInView';
 import { Mail, MapPin, Linkedin, Github, Twitter } from 'lucide-react';
 import GradualBlur from './GradualBlur';
