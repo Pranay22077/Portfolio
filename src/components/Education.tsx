@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useInView } from './useInView';
 import { GraduationCap, BookOpen, Code } from 'lucide-react';
 import GradualBlur from './GradualBlur';
+import ElectricBorder from './ElectricBorder';
 
 export function Education() {
   const { ref, isInView } = useInView();
@@ -92,8 +93,14 @@ export function Education() {
                 initial={{ opacity: 0, x: -30 }}
                 animate={isInView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.6, delay: index * 0.2 }}
-                className="border border-white/20 p-8 hover:border-white/50 transition-all backdrop-blur-sm bg-black/40"
+                className="relative border border-white/20 p-8 hover:border-white/50 transition-all backdrop-blur-sm bg-black/40"
               >
+                <ElectricBorder 
+                  color="#60A5FA" 
+                  speed={1.2} 
+                  chaos={0.4} 
+                  thickness={1}
+                />
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6">
                   <div className="flex items-start gap-4 mb-4 md:mb-0">
                     <div className="p-3 border border-white/20">
