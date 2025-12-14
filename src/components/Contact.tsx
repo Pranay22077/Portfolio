@@ -10,8 +10,8 @@ export function Contact() {
     {
       icon: Mail,
       label: 'Email',
-      value: 'alex.johnson@example.com',
-      link: 'mailto:alex.johnson@example.com',
+      value: 'gadhpranay@gmail.com',
+      link: 'mailto:gadhpranay@gmail.com',
     },
     {
       icon: MapPin,
@@ -21,9 +21,9 @@ export function Contact() {
   ];
 
   const social = [
-    { icon: Github, label: 'GitHub', link: 'https://github.com' },
-    { icon: Linkedin, label: 'LinkedIn', link: 'https://linkedin.com' },
-    { icon: Twitter, label: 'Twitter', link: 'https://twitter.com' },
+    { icon: Github, label: 'GitHub', link: 'https://github.com/Pranay22077' },
+    { icon: Linkedin, label: 'LinkedIn', link: 'https://www.linkedin.com/in/pranay22077/' },
+    { icon: Mail, label: 'Email', link: 'mailto:gadhpranay@gmail.com' },
   ];
 
   return (

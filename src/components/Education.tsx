@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useInView } from './useInView';
-import { GraduationCap, BookOpen, Code, Award } from 'lucide-react';
+import { GraduationCap, BookOpen, Code, Award, ExternalLink } from 'lucide-react';
 import GradualBlur from './GradualBlur';
 import ElectricBorder from './ElectricBorder';
 
@@ -9,53 +9,75 @@ export function Education() {
 
   const education = [
     {
-      degree: 'Bachelor of Technology in Computer Science',
+      degree: 'Bachelor of Technology in Mathematics & Computing',
       institution: 'Delhi Technological University (DTU)',
-      duration: '2022 - 2026',
-      gpa: '9.1 / 10.0',
+      duration: '2024 - 2028',
+      gpa: '9.5 / 10.0 (till 2nd semester only)',
       highlights: [
-        'Specializing in Machine Learning and Artificial Intelligence',
-        'Active participant in hackathons and coding competitions',
-        'Focus on full-stack development and deep learning research',
+        'Specializing in Machine Learning, Deep Learning, and Computer Vision',
+        'Research Intern at 5G Lab, AIMS-DTU, and Applied Mathematics Dept.',
+        'Active member of AIMS-DTU (AI Society) and MACS-DTU (Math Society)',
       ],
     },
     {
-      degree: 'Higher Secondary Education (PCM)',
-      institution: 'Delhi Public School',
-      duration: '2020 - 2022',
-      gpa: '94.2%',
+      degree: 'Higher Secondary Education (XII - CBSE)',
+      institution: 'Aristotle Public School',
+      duration: '2022 - 2024',
+      gpa: '93.4%',
       highlights: [
         'Physics, Chemistry, Mathematics with Computer Science',
-        'School Programming Club Leader',
-        'Winner of Inter-School Coding Competition',
+        'Strong foundation in mathematical concepts and analytical thinking',
+        'Developed interest in programming and computational mathematics',
+      ],
+    },
+    {
+      degree: 'Secondary Education (X - CBSE)',
+      institution: 'Sachdeva Public School',
+      duration: '2020 - 2022',
+      gpa: '97.2%',
+      highlights: [
+        'Excellent academic performance with distinction in all subjects',
+        'Strong foundation in Science and Mathematics',
+        'Developed analytical and problem-solving skills',
       ],
     },
   ];
 
   const certifications = [
     {
-      icon: Code,
-      title: 'Deep Learning Specialization',
-      issuer: 'DeepLearning.AI',
-      year: '2024',
-    },
-    {
       icon: BookOpen,
       title: 'Machine Learning Specialization',
-      issuer: 'Stanford University',
-      year: '2023',
+      issuer: 'Stanford University, DeepLearning.AI',
+      year: '2024',
+      link: 'https://www.coursera.org/specializations/machine-learning-introduction'
     },
     {
       icon: Code,
-      title: 'PyTorch for Deep Learning',
-      issuer: 'PyTorch Foundation',
-      year: '2023',
+      title: 'Deep Learning Specialization',
+      issuer: 'Stanford University, DeepLearning.AI',
+      year: '2024',
+      link: 'https://www.coursera.org/specializations/deep-learning'
     },
     {
       icon: BookOpen,
-      title: 'TensorFlow Developer Certificate',
-      issuer: 'Google',
+      title: 'GANs Specialization (Complete)',
+      issuer: 'DeepLearning.AI',
       year: '2024',
+      link: 'https://www.coursera.org/specializations/generative-adversarial-networks-gans'
+    },
+    {
+      icon: Code,
+      title: 'C/C++ Programming Language',
+      issuer: 'Coursera',
+      year: '2024',
+      link: 'https://www.coursera.org/learn/c-plus-plus-a'
+    },
+    {
+      icon: BookOpen,
+      title: 'Data Structures & Algorithms',
+      issuer: 'GeeksforGeeks',
+      year: '2024',
+      link: 'https://www.geeksforgeeks.org/courses/dsa-self-paced'
     },
   ];
 
@@ -149,11 +171,18 @@ export function Education() {
                   transition={{ duration: 0.6, delay: index * 0.15 }}
                   className="group relative"
                 >
-                  {/* Animated border effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-cyan-500/20 to-blue-500/20 rounded-xl blur-xl group-hover:blur-2xl transition-all duration-500 opacity-60 group-hover:opacity-100" />
-                  
-                  {/* Main card */}
-                  <div className="relative backdrop-blur-xl bg-black/60 border border-white/10 rounded-xl p-8 group-hover:border-blue-400/40 transition-all duration-500 group-hover:bg-black/70 overflow-hidden">
+                  <a
+                    href={cert.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block cursor-pointer"
+                    title={`View ${cert.title} certificate`}
+                  >
+                    {/* Animated border effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-cyan-500/20 to-blue-500/20 rounded-xl blur-xl group-hover:blur-2xl transition-all duration-500 opacity-60 group-hover:opacity-100" />
+                    
+                    {/* Main card */}
+                    <div className="relative backdrop-blur-xl bg-black/60 border border-white/10 rounded-xl p-8 group-hover:border-blue-400/40 transition-all duration-500 group-hover:bg-black/70 overflow-hidden">
                     
                     {/* Animated background pattern */}
                     <div className="absolute inset-0 opacity-5 group-hover:opacity-10 transition-opacity duration-500">
@@ -168,10 +197,11 @@ export function Education() {
                         <div className="p-4 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-400/30 rounded-lg group-hover:from-blue-500/30 group-hover:to-cyan-500/30 transition-all duration-300 backdrop-blur-sm">
                           <cert.icon className="w-8 h-8 text-blue-400 group-hover:text-blue-300 transition-colors duration-300" />
                         </div>
-                        <div className="text-right">
+                        <div className="text-right flex flex-col items-end gap-2">
                           <div className="px-3 py-1 bg-blue-500/20 border border-blue-400/30 rounded-full">
                             <span className="text-sm font-medium text-blue-400">{cert.year}</span>
                           </div>
+                          <ExternalLink className="w-4 h-4 text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </div>
                       </div>
                       
@@ -200,9 +230,10 @@ export function Education() {
                       </div>
                     </div>
                     
-                    {/* Hover glow effect */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-cyan-500/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  </div>
+                      {/* Hover glow effect */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-cyan-500/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    </div>
+                  </a>
                 </motion.div>
               ))}
             </div>

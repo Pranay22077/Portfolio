@@ -4,6 +4,7 @@ import { Skills } from './components/Skills';
 import { Projects } from './components/Projects';
 import { Achievements } from './components/Achievements';
 import { Education } from './components/Education';
+import { Recognition } from './components/Recognition';
 import { Contact } from './components/Contact';
 import BubbleMenu from './components/BubbleMenu';
 import GradientText from './components/GradientText';
@@ -25,6 +26,7 @@ export default function App() {
         <Projects />
         <Achievements />
         <Education />
+        <Recognition />
         <Contact />
       </div>
     </div>

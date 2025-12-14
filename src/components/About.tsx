@@ -36,26 +36,26 @@ export function About() {
           
           <div className="space-y-6 text-gray-300 leading-relaxed text-lg max-w-3xl mx-auto">
             <p>
-              I'm a third-year BTech student majoring in <span className="text-white font-semibold">Computer Science</span>, driven by a passion for
-              technology and innovation. My journey in programming started in high school, and since
+              I'm a second-year <span className="text-white font-semibold">Mathematics & Computer Science</span> undergraduate, driven by a passion for
+              technology and innovation. My programming journey started in college, and since
               then, I've been captivated by the endless possibilities of software development.
             </p>
             <p>
-              Currently, I'm focusing on <span className="text-white font-semibold">full-stack web development</span> and <span className="text-white font-semibold">machine learning</span>, working on
+              Currently, I'm focusing on <span className="text-white font-semibold">open source contributions</span> and <span className="text-white font-semibold">machine learning</span>, working on
               projects that solve real-world problems. I believe in continuous learning and staying
-              updated with the latest industry trends.
+              updated with the latest industry trends and technologies.
             </p>
             <p>
-              Beyond coding, I'm an active participant in <span className="text-white font-semibold">hackathons</span> and <span className="text-white font-semibold">coding competitions</span>,
+              As a <span className="text-white font-semibold">SIH'25 Grand Finalist</span>, I'm an active participant in <span className="text-white font-semibold">hackathons</span> and <span className="text-white font-semibold">coding competitions</span>,
               constantly challenging myself to think creatively and work efficiently under pressure.
             </p>
           </div>
           
           <div className="flex flex-wrap justify-center gap-4 mt-10">
-            <span className="px-6 py-3 bg-blue-500/10 rounded-full text-sm border border-blue-400/30 hover:bg-blue-500/20 transition-colors">Full-Stack Development</span>
-            <span className="px-6 py-3 bg-blue-500/10 rounded-full text-sm border border-blue-400/30 hover:bg-blue-500/20 transition-colors">Machine Learning</span>
-            <span className="px-6 py-3 bg-blue-500/10 rounded-full text-sm border border-blue-400/30 hover:bg-blue-500/20 transition-colors">Problem Solving</span>
             <span className="px-6 py-3 bg-blue-500/10 rounded-full text-sm border border-blue-400/30 hover:bg-blue-500/20 transition-colors">Open Source</span>
+            <span className="px-6 py-3 bg-blue-500/10 rounded-full text-sm border border-blue-400/30 hover:bg-blue-500/20 transition-colors">Machine Learning</span>
+            <span className="px-6 py-3 bg-blue-500/10 rounded-full text-sm border border-blue-400/30 hover:bg-blue-500/20 transition-colors">Data Structures & Algorithms</span>
+            <span className="px-6 py-3 bg-blue-500/10 rounded-full text-sm border border-blue-400/30 hover:bg-blue-500/20 transition-colors">GenAI</span>
           </div>
 
           {/* Highlights integrated into the same box */}

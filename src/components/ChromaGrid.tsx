@@ -123,7 +123,14 @@ export const ChromaGrid: React.FC<ChromaGridProps> = ({
           }
         >
           <div className="chroma-img-wrapper">
-            <img src={c.image} alt={c.title} loading="lazy" />
+            {c.image.startsWith('http') ? (
+              <img src={c.image} alt={c.title} loading="lazy" />
+            ) : (
+              <div className="premium-project-header">
+                <div className="project-number">{String(i + 1).padStart(2, '0')}</div>
+                <div className="project-icon">{c.image}</div>
+              </div>
+            )}
           </div>
           <footer className="chroma-info">
             <h3 className="chroma-name">{c.title}</h3>

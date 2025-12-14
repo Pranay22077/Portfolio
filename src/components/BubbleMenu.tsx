@@ -59,10 +59,17 @@ const DEFAULT_ITEMS: MenuItem[] = [
     hoverStyles: { bgColor: '#ffffff', textColor: '#000000' }
   },
   {
+    label: 'recognition',
+    href: '#recognition',
+    ariaLabel: 'Recognition',
+    rotation: -8,
+    hoverStyles: { bgColor: '#ffffff', textColor: '#000000' }
+  },
+  {
     label: 'contact',
     href: '#contact',
     ariaLabel: 'Contact',
-    rotation: -8,
+    rotation: 8,
     hoverStyles: { bgColor: '#ffffff', textColor: '#000000' }
   }
 ];

@@ -9,7 +9,7 @@ export function Hero() {
   const [text, setText] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const fullText = 'PRANAY';
-  const fullSubtitle = 'AI/ML Enthusiast • Problem Solver • Mathematics & Computing Student';
+  const fullSubtitle = 'SIH\'25 Grand Finalist • AI/ML Enthusiast • DSA • Open Source Contributor';
   const containerRef = useRef<HTMLDivElement>(null);
 
   
@@ -62,34 +62,34 @@ export function Hero() {
                 speed={30}
                 maxIterations={8}
                 animateOn="view"
-                className="text-cyan-400"
+                className="text-blue-400"
                 encryptedClassName="text-gray-500"
               />
             </div>
             <div className="flex items-center justify-center space-x-4">
-              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-cyan-400/40"></div>
+              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-blue-400/40"></div>
               <div className="text-white/60 text-sm font-mono">
                 <TrueFocus 
                   sentence="CRAFTING THE FUTURE WITH CODE"
                   separator=" "
                   blurAmount={3}
-                  borderColor="#00bcd4"
-                  glowColor="rgba(0, 188, 212, 0.6)"
+                  borderColor="#60A5FA"
+                  glowColor="rgba(96, 165, 250, 0.6)"
                   animationDuration={0.8}
                   pauseBetweenAnimations={2}
                 />
               </div>
-              <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-cyan-400/40"></div>
+              <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-blue-400/40"></div>
             </div>
             <div className="text-gray-400 text-lg">
               <VariableProximity
-                label="B.Tech Mathematics & Computing | Open Source Contributor"
+                label="Mathematics & Computer Science Undergraduate | Open Source Contributor"
                 fromFontVariationSettings="'wght' 300, 'opsz' 12"
                 toFontVariationSettings="'wght' 700, 'opsz' 20"
                 containerRef={containerRef}
                 radius={80}
                 falloff="gaussian"
-                className="text-gray-400 hover:text-cyan-300 transition-colors"
+                className="text-gray-400 hover:text-blue-300 transition-colors"
               />
             </div>
           </div>
@@ -114,7 +114,7 @@ export function Hero() {
               <Linkedin size={24} className="text-white" />
             </a>
             <a
-              href="mailto:pranay@example.com"
+              href="mailto:gadhpranay@gmail.com"
               className="p-4 rounded-full hover:bg-white/20 transition-all hover:scale-110 backdrop-blur-sm border-2 border-white/30 hover:border-white/60"
               aria-label="Email"
             >

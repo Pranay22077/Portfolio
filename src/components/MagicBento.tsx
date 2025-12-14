@@ -33,38 +33,38 @@ const MOBILE_BREAKPOINT = 768;
 const skillsData: BentoCardProps[] = [
   {
     color: '#060010',
-    title: 'React & TypeScript',
-    description: 'Modern frontend development',
+    title: 'HTML, CSS, JS, TS',
+    description: 'Frontend fundamentals & React',
     label: 'Frontend'
   },
   {
     color: '#060010',
-    title: 'Node.js & Python',
-    description: 'Backend & API development',
+    title: 'Python & GenAI',
+    description: 'Backend development & AI/ML',
     label: 'Backend'
   },
   {
     color: '#060010',
-    title: 'Machine Learning',
-    description: 'AI/ML model development',
+    title: 'ML, DL & GANs',
+    description: 'TensorFlow & PyTorch',
     label: 'AI/ML'
   },
   {
     color: '#060010',
-    title: 'Cloud & DevOps',
-    description: 'AWS, Docker, CI/CD',
-    label: 'Infrastructure'
+    title: 'Docker & Cloud',
+    description: 'Containerization & deployment',
+    label: 'DevOps'
   },
   {
     color: '#060010',
-    title: 'Database Design',
-    description: 'SQL & NoSQL databases',
-    label: 'Data'
+    title: 'Data Structures',
+    description: 'Algorithms & problem solving',
+    label: 'DSA'
   },
   {
     color: '#060010',
-    title: 'UI/UX Design',
-    description: 'User-centered design',
+    title: 'Figma & Canva',
+    description: 'UI/UX & creative design',
     label: 'Design'
   }
 ];

@@ -7,58 +7,58 @@ export function Projects() {
 
   const projects: ChromaItem[] = [
     {
-      image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&h=300&fit=crop',
-      title: 'AI-Powered Image Generator',
-      subtitle: 'GAN-based image generation system using PyTorch with DCGAN architecture for high-quality synthetic images.',
-      handle: 'Python • PyTorch • GANs',
-      borderColor: '#ffffff',
+      image: '',
+      title: 'YOLOv8 Architecture from Scratch',
+      subtitle: 'Complete implementation of YOLOv8 object detection architecture built from ground up.',
+      handle: 'Python • PyTorch • Computer Vision',
+      borderColor: '#60A5FA',
       gradient: 'linear-gradient(145deg, #1a1a1a, #000)',
-      url: 'https://github.com/Pranay22077'
+      url: 'https://github.com/Pranay22077/YOLOv8-architecture-from-scratch'
     },
     {
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop',
-      title: 'Smart Data Analytics Platform',
-      subtitle: 'Comprehensive data analytics with ML-powered insights and interactive dashboards.',
-      handle: 'Python • TensorFlow • React',
-      borderColor: '#ffffff',
+      image: '',
+      title: 'OceanEYE TaxaFormer',
+      subtitle: 'Advanced marine species classification system using transformer architecture for ocean research.',
+      handle: 'TypeScript • Machine Learning • Ocean Tech',
+      borderColor: '#60A5FA',
       gradient: 'linear-gradient(180deg, #1a1a1a, #000)',
-      url: 'https://github.com/Pranay22077'
+      url: 'https://github.com/Pranay22077/OceanEYE-s-TaxaFormer'
     },
     {
-      image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400&h=300&fit=crop',
-      title: 'Algorithm Visualizer',
-      subtitle: 'Interactive web app for visualizing sorting and graph algorithms with step-by-step execution.',
-      handle: 'JavaScript • React • D3.js',
-      borderColor: '#ffffff',
+      image: '',
+      title: 'Fashion Virtual Try-On',
+      subtitle: 'AI-powered virtual fashion try-on system using deep learning and computer vision techniques.',
+      handle: 'Python • Deep Learning • Fashion Tech',
+      borderColor: '#60A5FA',
       gradient: 'linear-gradient(165deg, #1a1a1a, #000)',
-      url: 'https://github.com/Pranay22077'
+      url: 'https://github.com/Pranay22077/Fashion-Virtual-Try-On'
     },
     {
-      image: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=400&h=300&fit=crop',
-      title: 'Machine Learning Model Hub',
-      subtitle: 'Collection of ML models for classification, regression, and clustering with documentation.',
-      handle: 'Python • Scikit-Learn • NumPy',
-      borderColor: '#ffffff',
+      image: '',
+      title: 'Image Super-Resolution',
+      subtitle: 'Advanced image enhancement using deep learning models for high-quality image upscaling.',
+      handle: 'Python • GANs • Image Processing',
+      borderColor: '#60A5FA',
       gradient: 'linear-gradient(195deg, #1a1a1a, #000)',
-      url: 'https://github.com/Pranay22077'
+      url: 'https://github.com/Pranay22077/Image-Super-Resolution'
     },
     {
-      image: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&h=300&fit=crop',
-      title: 'Deep Learning Research',
-      subtitle: 'Research on advanced neural network architectures for image classification.',
-      handle: 'PyTorch • Keras • Research',
-      borderColor: '#ffffff',
+      image: '',
+      title: 'Hand Movement Recognition',
+      subtitle: 'Real-time hand gesture recognition system using computer vision and machine learning.',
+      handle: 'Python • OpenCV • ML',
+      borderColor: '#60A5FA',
       gradient: 'linear-gradient(225deg, #1a1a1a, #000)',
-      url: 'https://github.com/Pranay22077'
+      url: 'https://github.com/Pranay22077/Hand-Movement_Recognition'
     },
     {
-      image: 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=400&h=300&fit=crop',
-      title: 'Open Source Contributions',
-      subtitle: 'Active contributor to ML libraries, educational resources, and community projects.',
-      handle: 'Python • Documentation • Community',
-      borderColor: '#ffffff',
+      image: '',
+      title: 'Lane Mapping using OpenCV',
+      subtitle: 'Autonomous vehicle lane detection and mapping system using computer vision algorithms.',
+      handle: 'Python • OpenCV • Autonomous Systems',
+      borderColor: '#60A5FA',
       gradient: 'linear-gradient(135deg, #1a1a1a, #000)',
-      url: 'https://github.com/Pranay22077'
+      url: 'https://github.com/Pranay22077/Lane-Mapping-using-OpenCV'
     }
   ];
 
