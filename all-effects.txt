@@ -1,0 +1,3238 @@
+Chroma grid:
+npm install gsap
+USAGE:
+import ChromaGrid from './ChromaGrid'
+
+const items = [
+  {
+    image: "https://i.pravatar.cc/300?img=1",
+    title: "Sarah Johnson",
+    subtitle: "Frontend Developer",
+    handle: "@sarahjohnson",
+    borderColor: "#3B82F6",
+    gradient: "linear-gradient(145deg, #3B82F6, #000)",
+    url: "https://github.com/sarahjohnson"
+  },
+  {
+    image: "https://i.pravatar.cc/300?img=2",
+    title: "Mike Chen",
+    subtitle: "Backend Engineer",
+    handle: "@mikechen",
+    borderColor: "#10B981",
+    gradient: "linear-gradient(180deg, #10B981, #000)",
+    url: "https://linkedin.com/in/mikechen"
+  }
+];
+
+<div style={{ height: '600px', position: 'relative' }}>
+  <ChromaGrid 
+    items={items}
+    radius={300}
+    damping={0.45}
+    fadeOut={0.6}
+    ease="power3.out"
+  />
+</div>
+CODE:
+import React, { useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
+import './ChromaGrid.css';
+
+export interface ChromaItem {
+  image: string;
+  title: string;
+  subtitle: string;
+  handle?: string;
+  location?: string;
+  borderColor?: string;
+  gradient?: string;
+  url?: string;
+}
+
+export interface ChromaGridProps {
+  items?: ChromaItem[];
+  className?: string;
+  radius?: number;
+  columns?: number;
+  rows?: number;
+  damping?: number;
+  fadeOut?: number;
+  ease?: string;
+}
+
+type SetterFn = (v: number | string) => void;
+
+export const ChromaGrid: React.FC<ChromaGridProps> = ({
+  items,
+  className = '',
+  radius = 300,
+  columns = 3,
+  rows = 2,
+  damping = 0.45,
+  fadeOut = 0.6,
+  ease = 'power3.out'
+}) => {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const fadeRef = useRef<HTMLDivElement>(null);
+  const setX = useRef<SetterFn | null>(null);
+  const setY = useRef<SetterFn | null>(null);
+  const pos = useRef({ x: 0, y: 0 });
+
+  const demo: ChromaItem[] = [
+    {
+      image: 'https://i.pravatar.cc/300?img=8',
+      title: 'Alex Rivera',
+      subtitle: 'Full Stack Developer',
+      handle: '@alexrivera',
+      borderColor: '#4F46E5',
+      gradient: 'linear-gradient(145deg, #4F46E5, #000)',
+      url: 'https://github.com/'
+    },
+    {
+      image: 'https://i.pravatar.cc/300?img=11',
+      title: 'Jordan Chen',
+      subtitle: 'DevOps Engineer',
+      handle: '@jordanchen',
+      borderColor: '#10B981',
+      gradient: 'linear-gradient(210deg, #10B981, #000)',
+      url: 'https://linkedin.com/in/'
+    },
+    {
+      image: 'https://i.pravatar.cc/300?img=3',
+      title: 'Morgan Blake',
+      subtitle: 'UI/UX Designer',
+      handle: '@morganblake',
+      borderColor: '#F59E0B',
+      gradient: 'linear-gradient(165deg, #F59E0B, #000)',
+      url: 'https://dribbble.com/'
+    },
+    {
+      image: 'https://i.pravatar.cc/300?img=16',
+      title: 'Casey Park',
+      subtitle: 'Data Scientist',
+      handle: '@caseypark',
+      borderColor: '#EF4444',
+      gradient: 'linear-gradient(195deg, #EF4444, #000)',
+      url: 'https://kaggle.com/'
+    },
+    {
+      image: 'https://i.pravatar.cc/300?img=25',
+      title: 'Sam Kim',
+      subtitle: 'Mobile Developer',
+      handle: '@thesamkim',
+      borderColor: '#8B5CF6',
+      gradient: 'linear-gradient(225deg, #8B5CF6, #000)',
+      url: 'https://github.com/'
+    },
+    {
+      image: 'https://i.pravatar.cc/300?img=60',
+      title: 'Tyler Rodriguez',
+      subtitle: 'Cloud Architect',
+      handle: '@tylerrod',
+      borderColor: '#06B6D4',
+      gradient: 'linear-gradient(135deg, #06B6D4, #000)',
+      url: 'https://aws.amazon.com/'
+    }
+  ];
+  const data = items?.length ? items : demo;
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    setX.current = gsap.quickSetter(el, '--x', 'px') as SetterFn;
+    setY.current = gsap.quickSetter(el, '--y', 'px') as SetterFn;
+    const { width, height } = el.getBoundingClientRect();
+    pos.current = { x: width / 2, y: height / 2 };
+    setX.current(pos.current.x);
+    setY.current(pos.current.y);
+  }, []);
+
+  const moveTo = (x: number, y: number) => {
+    gsap.to(pos.current, {
+      x,
+      y,
+      duration: damping,
+      ease,
+      onUpdate: () => {
+        setX.current?.(pos.current.x);
+        setY.current?.(pos.current.y);
+      },
+      overwrite: true
+    });
+  };
+
+  const handleMove = (e: React.PointerEvent) => {
+    const r = rootRef.current!.getBoundingClientRect();
+    moveTo(e.clientX - r.left, e.clientY - r.top);
+    gsap.to(fadeRef.current, { opacity: 0, duration: 0.25, overwrite: true });
+  };
+
+  const handleLeave = () => {
+    gsap.to(fadeRef.current, {
+      opacity: 1,
+      duration: fadeOut,
+      overwrite: true
+    });
+  };
+
+  const handleCardClick = (url?: string) => {
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const handleCardMove: React.MouseEventHandler<HTMLElement> = e => {
+    const card = e.currentTarget as HTMLElement;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+  };
+
+  return (
+    <div
+      ref={rootRef}
+      className={`chroma-grid ${className}`}
+      style={
+        {
+          '--r': `${radius}px`,
+          '--cols': columns,
+          '--rows': rows
+        } as React.CSSProperties
+      }
+      onPointerMove={handleMove}
+      onPointerLeave={handleLeave}
+    >
+      {data.map((c, i) => (
+        <article
+          key={i}
+          className="chroma-card"
+          onMouseMove={handleCardMove}
+          onClick={() => handleCardClick(c.url)}
+          style={
+            {
+              '--card-border': c.borderColor || 'transparent',
+              '--card-gradient': c.gradient,
+              cursor: c.url ? 'pointer' : 'default'
+            } as React.CSSProperties
+          }
+        >
+          <div className="chroma-img-wrapper">
+            <img src={c.image} alt={c.title} loading="lazy" />
+          </div>
+          <footer className="chroma-info">
+            <h3 className="name">{c.title}</h3>
+            {c.handle && <span className="handle">{c.handle}</span>}
+            <p className="role">{c.subtitle}</p>
+            {c.location && <span className="location">{c.location}</span>}
+          </footer>
+        </article>
+      ))}
+      <div className="chroma-overlay" />
+      <div ref={fadeRef} className="chroma-fade" />
+    </div>
+  );
+};
+
+export default ChromaGrid;
+.chroma-grid {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), 320px);
+  grid-auto-rows: auto;
+  justify-content: center;
+  gap: 0.75rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+
+  --x: 50%;
+  --y: 50%;
+  --r: 220px;
+}
+
+@media (max-width: 1124px) {
+  .chroma-grid {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 320px));
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .chroma-grid {
+    grid-template-columns: 320px;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+}
+
+.chroma-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 320px;
+  height: auto;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #333;
+  transition: border-color 0.3s ease;
+  background: var(--card-gradient);
+
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  --spotlight-color: rgba(255, 255, 255, 0.3);
+}
+
+.chroma-card:hover {
+  border-color: var(--card-border);
+}
+
+.chroma-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 2;
+}
+
+.chroma-card:hover::before {
+  opacity: 1;
+}
+
+.chroma-img-wrapper {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  padding: 10px;
+  box-sizing: border-box;
+  background: transparent;
+  transition: background 0.3s ease;
+}
+
+.chroma-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.chroma-info {
+  position: relative;
+  z-index: 1;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 0.25rem;
+  column-gap: 0.75rem;
+}
+
+.chroma-info .role,
+.chroma-info .handle {
+  color: #aaa;
+}
+
+.chroma-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  backdrop-filter: grayscale(1) brightness(0.78);
+  -webkit-backdrop-filter: grayscale(1) brightness(0.78);
+  background: rgba(0, 0, 0, 0.001);
+
+  mask-image: radial-gradient(
+    circle var(--r) at var(--x) var(--y),
+    transparent 0%,
+    transparent 15%,
+    rgba(0, 0, 0, 0.1) 30%,
+    rgba(0, 0, 0, 0.22) 45%,
+    rgba(0, 0, 0, 0.35) 60%,
+    rgba(0, 0, 0, 0.5) 75%,
+    rgba(0, 0, 0, 0.68) 88%,
+    white 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle var(--r) at var(--x) var(--y),
+    transparent 0%,
+    transparent 15%,
+    rgba(0, 0, 0, 0.1) 30%,
+    rgba(0, 0, 0, 0.22) 45%,
+    rgba(0, 0, 0, 0.35) 60%,
+    rgba(0, 0, 0, 0.5) 75%,
+    rgba(0, 0, 0, 0.68) 88%,
+    white 100%
+  );
+}
+
+.chroma-fade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  backdrop-filter: grayscale(1) brightness(0.78);
+  -webkit-backdrop-filter: grayscale(1) brightness(0.78);
+  background: rgba(0, 0, 0, 0.001);
+
+  mask-image: radial-gradient(
+    circle var(--r) at var(--x) var(--y),
+    white 0%,
+    white 15%,
+    rgba(255, 255, 255, 0.9) 30%,
+    rgba(255, 255, 255, 0.78) 45%,
+    rgba(255, 255, 255, 0.65) 60%,
+    rgba(255, 255, 255, 0.5) 75%,
+    rgba(255, 255, 255, 0.32) 88%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    circle var(--r) at var(--x) var(--y),
+    white 0%,
+    white 15%,
+    rgba(255, 255, 255, 0.9) 30%,
+    rgba(255, 255, 255, 0.78) 45%,
+    rgba(255, 255, 255, 0.65) 60%,
+    rgba(255, 255, 255, 0.5) 75%,
+    rgba(255, 255, 255, 0.32) 88%,
+    transparent 100%
+  );
+
+  opacity: 1;
+  transition: opacity 0.25s ease;
+}
+
+FOLDER:
+npx shadcn@latest add @react-bits/Folder-TS-CSS
+USAGE:
+import Folder from './Folder'
+
+<div style={{ height: '600px', position: 'relative' }}>
+  <Folder size={2} color="#5227FF" className="custom-folder" />
+</div>
+CODE:
+import React, { useState } from 'react';
+import './Folder.css';
+
+interface FolderProps {
+  color?: string;
+  size?: number;
+  items?: React.ReactNode[];
+  className?: string;
+}
+
+const darkenColor = (hex: string, percent: number): string => {
+  let color = hex.startsWith('#') ? hex.slice(1) : hex;
+  if (color.length === 3) {
+    color = color
+      .split('')
+      .map(c => c + c)
+      .join('');
+  }
+  const num = parseInt(color, 16);
+  let r = (num >> 16) & 0xff;
+  let g = (num >> 8) & 0xff;
+  let b = num & 0xff;
+  r = Math.max(0, Math.min(255, Math.floor(r * (1 - percent))));
+  g = Math.max(0, Math.min(255, Math.floor(g * (1 - percent))));
+  b = Math.max(0, Math.min(255, Math.floor(b * (1 - percent))));
+  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+};
+
+const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = [], className = '' }) => {
+  const maxItems = 3;
+  const papers = items.slice(0, maxItems);
+  while (papers.length < maxItems) {
+    papers.push(null);
+  }
+
+  const [open, setOpen] = useState(false);
+  const [paperOffsets, setPaperOffsets] = useState<{ x: number; y: number }[]>(
+    Array.from({ length: maxItems }, () => ({ x: 0, y: 0 }))
+  );
+
+  const folderBackColor = darkenColor(color, 0.08);
+  const paper1 = darkenColor('#ffffff', 0.1);
+  const paper2 = darkenColor('#ffffff', 0.05);
+  const paper3 = '#ffffff';
+
+  const handleClick = () => {
+    setOpen(prev => !prev);
+    if (open) {
+      setPaperOffsets(Array.from({ length: maxItems }, () => ({ x: 0, y: 0 })));
+    }
+  };
+
+  const handlePaperMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
+    if (!open) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const offsetX = (e.clientX - centerX) * 0.15;
+    const offsetY = (e.clientY - centerY) * 0.15;
+    setPaperOffsets(prev => {
+      const newOffsets = [...prev];
+      newOffsets[index] = { x: offsetX, y: offsetY };
+      return newOffsets;
+    });
+  };
+
+  const handlePaperMouseLeave = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
+    setPaperOffsets(prev => {
+      const newOffsets = [...prev];
+      newOffsets[index] = { x: 0, y: 0 };
+      return newOffsets;
+    });
+  };
+
+  const folderStyle: React.CSSProperties = {
+    '--folder-color': color,
+    '--folder-back-color': folderBackColor,
+    '--paper-1': paper1,
+    '--paper-2': paper2,
+    '--paper-3': paper3
+  } as React.CSSProperties;
+
+  const folderClassName = `folder ${open ? 'open' : ''}`.trim();
+  const scaleStyle = { transform: `scale(${size})` };
+
+  return (
+    <div style={scaleStyle} className={className}>
+      <div className={folderClassName} style={folderStyle} onClick={handleClick}>
+        <div className="folder__back">
+          {papers.map((item, i) => (
+            <div
+              key={i}
+              className={`paper paper-${i + 1}`}
+              onMouseMove={e => handlePaperMouseMove(e, i)}
+              onMouseLeave={e => handlePaperMouseLeave(e, i)}
+              style={
+                open
+                  ? ({
+                      '--magnet-x': `${paperOffsets[i]?.x || 0}px`,
+                      '--magnet-y': `${paperOffsets[i]?.y || 0}px`
+                    } as React.CSSProperties)
+                  : {}
+              }
+            >
+              {item}
+            </div>
+          ))}
+          <div className="folder__front"></div>
+          <div className="folder__front right"></div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Folder;
+:root {
+  --folder-color: #70a1ff;
+  --folder-back-color: #4785ff;
+  --paper-1: #e6e6e6;
+  --paper-2: #f2f2f2;
+  --paper-3: #ffffff;
+}
+
+.folder {
+  transition: all 0.2s ease-in;
+  cursor: pointer;
+}
+
+.folder:not(.folder--click):hover {
+  transform: translateY(-8px);
+}
+
+.folder:not(.folder--click):hover .paper {
+  transform: translate(-50%, 0%);
+}
+
+.folder:not(.folder--click):hover .folder__front {
+  transform: skew(15deg) scaleY(0.6);
+}
+
+.folder:not(.folder--click):hover .right {
+  transform: skew(-15deg) scaleY(0.6);
+}
+
+.folder.open {
+  transform: translateY(-8px);
+}
+
+.folder.open .paper:nth-child(1) {
+  transform: translate(-120%, -70%) rotateZ(-15deg);
+}
+
+.folder.open .paper:nth-child(1):hover {
+  transform: translate(-120%, -70%) rotateZ(-15deg) scale(1.1);
+}
+
+.folder.open .paper:nth-child(2) {
+  transform: translate(10%, -70%) rotateZ(15deg);
+  height: 80%;
+}
+
+.folder.open .paper:nth-child(2):hover {
+  transform: translate(10%, -70%) rotateZ(15deg) scale(1.1);
+}
+
+.folder.open .paper:nth-child(3) {
+  transform: translate(-50%, -100%) rotateZ(5deg);
+  height: 80%;
+}
+
+.folder.open .paper:nth-child(3):hover {
+  transform: translate(-50%, -100%) rotateZ(5deg) scale(1.1);
+}
+
+.folder.open .folder__front {
+  transform: skew(15deg) scaleY(0.6);
+}
+
+.folder.open .right {
+  transform: skew(-15deg) scaleY(0.6);
+}
+
+.folder__back {
+  position: relative;
+  width: 100px;
+  height: 80px;
+  background: var(--folder-back-color);
+  border-radius: 0px 10px 10px 10px;
+}
+
+.folder__back::after {
+  position: absolute;
+  z-index: 0;
+  bottom: 98%;
+  left: 0;
+  content: '';
+  width: 30px;
+  height: 10px;
+  background: var(--folder-back-color);
+  border-radius: 5px 5px 0 0;
+}
+
+.paper {
+  position: absolute;
+  z-index: 2;
+  bottom: 10%;
+  left: 50%;
+  transform: translate(-50%, 10%);
+  width: 70%;
+  height: 80%;
+  background: var(--paper-1);
+  border-radius: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+.paper:nth-child(2) {
+  background: var(--paper-2);
+  width: 80%;
+  height: 70%;
+}
+
+.paper:nth-child(3) {
+  background: var(--paper-3);
+  width: 90%;
+  height: 60%;
+}
+
+.folder__front {
+  position: absolute;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  background: var(--folder-color);
+  border-radius: 5px 10px 10px 10px;
+  transform-origin: bottom;
+  transition: all 0.3s ease-in-out;
+}
+
+MODEL VIEWER:
+npx shadcn@latest add @react-bits/ModelViewer-TS-CSS
+import ModelViewer from './ModelViewer';
+
+<ModelViewer
+  url="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/main/2.0/ToyCar/glTF-Binary/ToyCar.glb"
+  width={400}
+  height={400}
+/>
+
+CODE:
+import { FC, Suspense, useRef, useLayoutEffect, useEffect, useMemo } from 'react';
+import { Canvas, useFrame, useLoader, useThree, invalidate } from '@react-three/fiber';
+import { OrbitControls, useGLTF, useFBX, useProgress, Html, Environment, ContactShadows } from '@react-three/drei';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import * as THREE from 'three';
+
+const isMeshObject = (object: THREE.Object3D): object is THREE.Mesh => {
+  return 'isMesh' in object && object.isMesh === true;
+};
+
+const isLightObject = (object: THREE.Object3D): object is THREE.Light => {
+  return 'isLight' in object && object.isLight === true;
+};
+
+export interface ViewerProps {
+  url: string;
+  width?: number | string;
+  height?: number | string;
+  modelXOffset?: number;
+  modelYOffset?: number;
+  defaultRotationX?: number;
+  defaultRotationY?: number;
+  defaultZoom?: number;
+  minZoomDistance?: number;
+  maxZoomDistance?: number;
+  enableMouseParallax?: boolean;
+  enableManualRotation?: boolean;
+  enableHoverRotation?: boolean;
+  enableManualZoom?: boolean;
+  ambientIntensity?: number;
+  keyLightIntensity?: number;
+  fillLightIntensity?: number;
+  rimLightIntensity?: number;
+  environmentPreset?: 'city' | 'sunset' | 'night' | 'dawn' | 'studio' | 'apartment' | 'forest' | 'park' | 'none';
+  autoFrame?: boolean;
+  placeholderSrc?: string;
+  showScreenshotButton?: boolean;
+  fadeIn?: boolean;
+  autoRotate?: boolean;
+  autoRotateSpeed?: number;
+  onModelLoaded?: () => void;
+}
+
+const isTouch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+const deg2rad = (d: number) => (d * Math.PI) / 180;
+const DECIDE = 8; // px before we decide horizontal vs vertical
+const ROTATE_SPEED = 0.005;
+const INERTIA = 0.925;
+const PARALLAX_MAG = 0.05;
+const PARALLAX_EASE = 0.12;
+const HOVER_MAG = deg2rad(6);
+const HOVER_EASE = 0.15;
+
+const Loader: FC<{ placeholderSrc?: string }> = ({ placeholderSrc }) => {
+  const { progress, active } = useProgress();
+  if (!active && placeholderSrc) return null;
+  return (
+    <Html center>
+      {placeholderSrc ? (
+        <img src={placeholderSrc} width={128} height={128} style={{ filter: 'blur(8px)', borderRadius: 8 }} />
+      ) : (
+        `${Math.round(progress)} %`
+      )}
+    </Html>
+  );
+};
+
+const DesktopControls: FC<{
+  pivot: THREE.Vector3;
+  min: number;
+  max: number;
+  zoomEnabled: boolean;
+}> = ({ pivot, min, max, zoomEnabled }) => {
+  const ref = useRef<any>(null);
+  useFrame(() => ref.current?.target.copy(pivot));
+  return (
+    <OrbitControls
+      ref={ref}
+      makeDefault
+      enablePan={false}
+      enableRotate={false}
+      enableZoom={zoomEnabled}
+      minDistance={min}
+      maxDistance={max}
+    />
+  );
+};
+
+interface ModelInnerProps {
+  url: string;
+  xOff: number;
+  yOff: number;
+  pivot: THREE.Vector3;
+  initYaw: number;
+  initPitch: number;
+  minZoom: number;
+  maxZoom: number;
+  enableMouseParallax: boolean;
+  enableManualRotation: boolean;
+  enableHoverRotation: boolean;
+  enableManualZoom: boolean;
+  autoFrame: boolean;
+  fadeIn: boolean;
+  autoRotate: boolean;
+  autoRotateSpeed: number;
+  onLoaded?: () => void;
+}
+
+const ModelInner: FC<ModelInnerProps> = ({
+  url,
+  xOff,
+  yOff,
+  pivot,
+  initYaw,
+  initPitch,
+  minZoom,
+  maxZoom,
+  enableMouseParallax,
+  enableManualRotation,
+  enableHoverRotation,
+  enableManualZoom,
+  autoFrame,
+  fadeIn,
+  autoRotate,
+  autoRotateSpeed,
+  onLoaded
+}) => {
+  const outer = useRef<THREE.Group>(null!);
+  const inner = useRef<THREE.Group>(null!);
+  const { camera, gl } = useThree();
+
+  const vel = useRef({ x: 0, y: 0 });
+  const tPar = useRef({ x: 0, y: 0 });
+  const cPar = useRef({ x: 0, y: 0 });
+  const tHov = useRef({ x: 0, y: 0 });
+  const cHov = useRef({ x: 0, y: 0 });
+
+  const ext = useMemo(() => url.split('.').pop()!.toLowerCase(), [url]);
+  const content = useMemo<THREE.Object3D | null>(() => {
+    if (ext === 'glb' || ext === 'gltf') return useGLTF(url).scene.clone();
+    if (ext === 'fbx') return useFBX(url).clone();
+    if (ext === 'obj') return useLoader(OBJLoader, url).clone();
+    console.error('Unsupported format:', ext);
+    return null;
+  }, [url, ext]);
+
+  const pivotW = useRef(new THREE.Vector3());
+  useLayoutEffect(() => {
+    if (!content) return;
+    const g = inner.current;
+    g.updateWorldMatrix(true, true);
+
+    const sphere = new THREE.Box3().setFromObject(g).getBoundingSphere(new THREE.Sphere());
+    const s = 1 / (sphere.radius * 2);
+    g.position.set(-sphere.center.x, -sphere.center.y, -sphere.center.z);
+    g.scale.setScalar(s);
+
+    g.traverse((o: THREE.Object3D) => {
+      if (isMeshObject(o)) {
+        o.castShadow = true;
+        o.receiveShadow = true;
+        if (fadeIn) {
+          const materials = Array.isArray(o.material) ? o.material : [o.material];
+          materials.forEach(material => {
+            material.transparent = true;
+            material.opacity = 0;
+          });
+        }
+      }
+    });
+
+    g.getWorldPosition(pivotW.current);
+    pivot.copy(pivotW.current);
+    outer.current.rotation.set(initPitch, initYaw, 0);
+
+    if (autoFrame && (camera as THREE.PerspectiveCamera).isPerspectiveCamera) {
+      const persp = camera as THREE.PerspectiveCamera;
+      const fitR = sphere.radius * s;
+      const d = (fitR * 1.2) / Math.sin((persp.fov * Math.PI) / 180 / 2);
+      persp.position.set(pivotW.current.x, pivotW.current.y, pivotW.current.z + d);
+      persp.near = d / 10;
+      persp.far = d * 10;
+      persp.updateProjectionMatrix();
+    }
+
+    /* optional fade-in */
+    if (fadeIn) {
+      let t = 0;
+      const id = setInterval(() => {
+        t += 0.05;
+        const v = Math.min(t, 1);
+        g.traverse((o: THREE.Object3D) => {
+          if (isMeshObject(o)) {
+            const materials = Array.isArray(o.material) ? o.material : [o.material];
+            materials.forEach(material => {
+              material.opacity = v;
+            });
+          }
+        });
+        invalidate();
+        if (v === 1) {
+          clearInterval(id);
+          onLoaded?.();
+        }
+      }, 16);
+      return () => clearInterval(id);
+    } else onLoaded?.();
+  }, [content]);
+
+  useEffect(() => {
+    if (!enableManualRotation || isTouch) return;
+    const el = gl.domElement;
+    let drag = false;
+    let lx = 0,
+      ly = 0;
+    const down = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
+      drag = true;
+      lx = e.clientX;
+      ly = e.clientY;
+      window.addEventListener('pointerup', up);
+    };
+    const move = (e: PointerEvent) => {
+      if (!drag) return;
+      const dx = e.clientX - lx;
+      const dy = e.clientY - ly;
+      lx = e.clientX;
+      ly = e.clientY;
+      outer.current.rotation.y += dx * ROTATE_SPEED;
+      outer.current.rotation.x += dy * ROTATE_SPEED;
+      vel.current = { x: dx * ROTATE_SPEED, y: dy * ROTATE_SPEED };
+      invalidate();
+    };
+    const up = () => (drag = false);
+    el.addEventListener('pointerdown', down);
+    el.addEventListener('pointermove', move);
+    return () => {
+      el.removeEventListener('pointerdown', down);
+      el.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+  }, [gl, enableManualRotation]);
+
+  useEffect(() => {
+    if (!isTouch) return;
+    const el = gl.domElement;
+    const pts = new Map<number, { x: number; y: number }>();
+    type Mode = 'idle' | 'decide' | 'rotate' | 'pinch';
+    let mode: Mode = 'idle';
+    let sx = 0,
+      sy = 0,
+      lx = 0,
+      ly = 0,
+      startDist = 0,
+      startZ = 0;
+
+    const down = (e: PointerEvent) => {
+      if (e.pointerType !== 'touch') return;
+      pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pts.size === 1) {
+        mode = 'decide';
+        sx = lx = e.clientX;
+        sy = ly = e.clientY;
+      } else if (pts.size === 2 && enableManualZoom) {
+        mode = 'pinch';
+        const [p1, p2] = [...pts.values()];
+        startDist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+        startZ = camera.position.z;
+        e.preventDefault();
+      }
+      invalidate();
+    };
+
+    const move = (e: PointerEvent) => {
+      const p = pts.get(e.pointerId);
+      if (!p) return;
+      p.x = e.clientX;
+      p.y = e.clientY;
+
+      if (mode === 'decide') {
+        const dx = e.clientX - sx;
+        const dy = e.clientY - sy;
+        if (Math.abs(dx) > DECIDE || Math.abs(dy) > DECIDE) {
+          if (enableManualRotation && Math.abs(dx) > Math.abs(dy)) {
+            mode = 'rotate';
+            el.setPointerCapture(e.pointerId);
+          } else {
+            mode = 'idle';
+            pts.clear();
+          }
+        }
+      }
+
+      if (mode === 'rotate') {
+        e.preventDefault();
+        const dx = e.clientX - lx;
+        const dy = e.clientY - ly;
+        lx = e.clientX;
+        ly = e.clientY;
+        outer.current.rotation.y += dx * ROTATE_SPEED;
+        outer.current.rotation.x += dy * ROTATE_SPEED;
+        vel.current = { x: dx * ROTATE_SPEED, y: dy * ROTATE_SPEED };
+        invalidate();
+      } else if (mode === 'pinch' && pts.size === 2) {
+        e.preventDefault();
+        const [p1, p2] = [...pts.values()];
+        const d = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+        const ratio = startDist / d;
+        camera.position.z = THREE.MathUtils.clamp(startZ * ratio, minZoom, maxZoom);
+        invalidate();
+      }
+    };
+
+    const up = (e: PointerEvent) => {
+      pts.delete(e.pointerId);
+      if (mode === 'rotate' && pts.size === 0) mode = 'idle';
+      if (mode === 'pinch' && pts.size < 2) mode = 'idle';
+    };
+
+    el.addEventListener('pointerdown', down, { passive: true });
+    window.addEventListener('pointermove', move, { passive: false });
+    window.addEventListener('pointerup', up, { passive: true });
+    window.addEventListener('pointercancel', up, { passive: true });
+    return () => {
+      el.removeEventListener('pointerdown', down);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+    };
+  }, [gl, enableManualRotation, enableManualZoom, minZoom, maxZoom]);
+
+  useEffect(() => {
+    if (isTouch) return;
+    const mm = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return;
+      const nx = (e.clientX / window.innerWidth) * 2 - 1;
+      const ny = (e.clientY / window.innerHeight) * 2 - 1;
+      if (enableMouseParallax) tPar.current = { x: -nx * PARALLAX_MAG, y: -ny * PARALLAX_MAG };
+      if (enableHoverRotation) tHov.current = { x: ny * HOVER_MAG, y: nx * HOVER_MAG };
+      invalidate();
+    };
+    window.addEventListener('pointermove', mm);
+    return () => window.removeEventListener('pointermove', mm);
+  }, [enableMouseParallax, enableHoverRotation]);
+
+  useFrame((_, dt) => {
+    let need = false;
+    cPar.current.x += (tPar.current.x - cPar.current.x) * PARALLAX_EASE;
+    cPar.current.y += (tPar.current.y - cPar.current.y) * PARALLAX_EASE;
+    const phx = cHov.current.x,
+      phy = cHov.current.y;
+    cHov.current.x += (tHov.current.x - cHov.current.x) * HOVER_EASE;
+    cHov.current.y += (tHov.current.y - cHov.current.y) * HOVER_EASE;
+
+    const ndc = pivotW.current.clone().project(camera);
+    ndc.x += xOff + cPar.current.x;
+    ndc.y += yOff + cPar.current.y;
+    outer.current.position.copy(ndc.unproject(camera));
+
+    outer.current.rotation.x += cHov.current.x - phx;
+    outer.current.rotation.y += cHov.current.y - phy;
+
+    if (autoRotate) {
+      outer.current.rotation.y += autoRotateSpeed * dt;
+      need = true;
+    }
+
+    outer.current.rotation.y += vel.current.x;
+    outer.current.rotation.x += vel.current.y;
+    vel.current.x *= INERTIA;
+    vel.current.y *= INERTIA;
+    if (Math.abs(vel.current.x) > 1e-4 || Math.abs(vel.current.y) > 1e-4) need = true;
+
+    if (
+      Math.abs(cPar.current.x - tPar.current.x) > 1e-4 ||
+      Math.abs(cPar.current.y - tPar.current.y) > 1e-4 ||
+      Math.abs(cHov.current.x - tHov.current.x) > 1e-4 ||
+      Math.abs(cHov.current.y - tHov.current.y) > 1e-4
+    )
+      need = true;
+
+    if (need) invalidate();
+  });
+
+  if (!content) return null;
+  return (
+    <group ref={outer}>
+      <group ref={inner}>
+        <primitive object={content} />
+      </group>
+    </group>
+  );
+};
+
+const ModelViewer: FC<ViewerProps> = ({
+  url,
+  width = 400,
+  height = 400,
+  modelXOffset = 0,
+  modelYOffset = 0,
+  defaultRotationX = -50,
+  defaultRotationY = 20,
+  defaultZoom = 0.5,
+  minZoomDistance = 0.5,
+  maxZoomDistance = 10,
+  enableMouseParallax = true,
+  enableManualRotation = true,
+  enableHoverRotation = true,
+  enableManualZoom = true,
+  ambientIntensity = 0.3,
+  keyLightIntensity = 1,
+  fillLightIntensity = 0.5,
+  rimLightIntensity = 0.8,
+  environmentPreset = 'forest',
+  autoFrame = false,
+  placeholderSrc,
+  showScreenshotButton = true,
+  fadeIn = false,
+  autoRotate = false,
+  autoRotateSpeed = 0.35,
+  onModelLoaded
+}) => {
+  useEffect(() => void useGLTF.preload(url), [url]);
+  const pivot = useRef(new THREE.Vector3()).current;
+  const contactRef = useRef<THREE.Mesh>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer>(null);
+  const sceneRef = useRef<THREE.Scene>(null);
+  const cameraRef = useRef<THREE.Camera>(null);
+
+  const initYaw = deg2rad(defaultRotationX);
+  const initPitch = deg2rad(defaultRotationY);
+  const camZ = Math.min(Math.max(defaultZoom, minZoomDistance), maxZoomDistance);
+
+  const capture = () => {
+    const g = rendererRef.current,
+      s = sceneRef.current,
+      c = cameraRef.current;
+    if (!g || !s || !c) return;
+    g.shadowMap.enabled = false;
+    const tmp: { l: THREE.Light; cast: boolean }[] = [];
+    s.traverse((o: THREE.Object3D) => {
+      if (isLightObject(o)) {
+        tmp.push({ l: o, cast: o.castShadow });
+        o.castShadow = false;
+      }
+    });
+    if (contactRef.current) contactRef.current.visible = false;
+    g.render(s, c);
+    const urlPNG = g.domElement.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.download = 'model.png';
+    a.href = urlPNG;
+    a.click();
+    g.shadowMap.enabled = true;
+    tmp.forEach(({ l, cast }) => (l.castShadow = cast));
+    if (contactRef.current) contactRef.current.visible = true;
+    invalidate();
+  };
+
+  return (
+    <div
+      style={{
+        width,
+        height,
+        position: 'relative',
+        touchAction: 'pan-y pinch-zoom'
+      }}
+    >
+      {showScreenshotButton && (
+        <button
+          onClick={capture}
+          style={{
+            position: 'absolute',
+            border: '1px solid #fff',
+            right: 16,
+            top: 16,
+            zIndex: 10,
+            cursor: 'pointer',
+            padding: '8px 16px',
+            borderRadius: 10
+          }}
+        >
+          Take Screenshot
+        </button>
+      )}
+
+      <Canvas
+        shadows
+        frameloop="demand"
+        gl={{ preserveDrawingBuffer: true }}
+        onCreated={({ gl, scene, camera }) => {
+          rendererRef.current = gl;
+          sceneRef.current = scene;
+          cameraRef.current = camera;
+          gl.toneMapping = THREE.ACESFilmicToneMapping;
+          gl.outputColorSpace = THREE.SRGBColorSpace;
+        }}
+        camera={{ fov: 50, position: [0, 0, camZ], near: 0.01, far: 100 }}
+        style={{ touchAction: 'pan-y pinch-zoom' }}
+      >
+        {environmentPreset !== 'none' && <Environment preset={environmentPreset as any} background={false} />}
+
+        <ambientLight intensity={ambientIntensity} />
+        <directionalLight position={[5, 5, 5]} intensity={keyLightIntensity} castShadow />
+        <directionalLight position={[-5, 2, 5]} intensity={fillLightIntensity} />
+        <directionalLight position={[0, 4, -5]} intensity={rimLightIntensity} />
+
+        <ContactShadows ref={contactRef as any} position={[0, -0.5, 0]} opacity={0.35} scale={10} blur={2} />
+
+        <Suspense fallback={<Loader placeholderSrc={placeholderSrc} />}>
+          <ModelInner
+            url={url}
+            xOff={modelXOffset}
+            yOff={modelYOffset}
+            pivot={pivot}
+            initYaw={initYaw}
+            initPitch={initPitch}
+            minZoom={minZoomDistance}
+            maxZoom={maxZoomDistance}
+            enableMouseParallax={enableMouseParallax}
+            enableManualRotation={enableManualRotation}
+            enableHoverRotation={enableHoverRotation}
+            enableManualZoom={enableManualZoom}
+            autoFrame={autoFrame}
+            fadeIn={fadeIn}
+            autoRotate={autoRotate}
+            autoRotateSpeed={autoRotateSpeed}
+            onLoaded={onModelLoaded}
+          />
+        </Suspense>
+
+        {!isTouch && (
+          <DesktopControls pivot={pivot} min={minZoomDistance} max={maxZoomDistance} zoomEnabled={enableManualZoom} />
+        )}
+      </Canvas>
+    </div>
+  );
+};
+
+export default ModelViewer;
+SCROLL STACK:
+npx shadcn@latest add @react-bits/ScrollStack-TS-CSS
+USAGE:
+import ScrollStack, { ScrollStackItem } from './ScrollStack'
+
+<ScrollStack>
+  <ScrollStackItem>
+    <h2>Card 1</h2>
+    <p>This is the first card in the stack</p>
+  </ScrollStackItem>
+  <ScrollStackItem>
+    <h2>Card 2</h2>
+    <p>This is the second card in the stack</p>
+  </ScrollStackItem>
+  <ScrollStackItem>
+    <h2>Card 3</h2>
+    <p>This is the third card in the stack</p>
+  </ScrollStackItem>
+</ScrollStack>
+CODE:
+import React, { useLayoutEffect, useRef, useCallback } from 'react';
+import type { ReactNode } from 'react';
+import Lenis from 'lenis';
+import './ScrollStack.css';
+
+export interface ScrollStackItemProps {
+  itemClassName?: string;
+  children: ReactNode;
+}
+
+export const ScrollStackItem: React.FC<ScrollStackItemProps> = ({ children, itemClassName = '' }) => (
+  <div className={`scroll-stack-card ${itemClassName}`.trim()}>{children}</div>
+);
+
+interface ScrollStackProps {
+  className?: string;
+  children: ReactNode;
+  itemDistance?: number;
+  itemScale?: number;
+  itemStackDistance?: number;
+  stackPosition?: string;
+  scaleEndPosition?: string;
+  baseScale?: number;
+  scaleDuration?: number;
+  rotationAmount?: number;
+  blurAmount?: number;
+  useWindowScroll?: boolean;
+  onStackComplete?: () => void;
+}
+
+const ScrollStack: React.FC<ScrollStackProps> = ({
+  children,
+  className = '',
+  itemDistance = 100,
+  itemScale = 0.03,
+  itemStackDistance = 30,
+  stackPosition = '20%',
+  scaleEndPosition = '10%',
+  baseScale = 0.85,
+  scaleDuration = 0.5,
+  rotationAmount = 0,
+  blurAmount = 0,
+  useWindowScroll = false,
+  onStackComplete
+}) => {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const stackCompletedRef = useRef(false);
+  const animationFrameRef = useRef<number | null>(null);
+  const lenisRef = useRef<Lenis | null>(null);
+  const cardsRef = useRef<HTMLElement[]>([]);
+  const lastTransformsRef = useRef(new Map<number, any>());
+  const isUpdatingRef = useRef(false);
+
+  const calculateProgress = useCallback((scrollTop: number, start: number, end: number) => {
+    if (scrollTop < start) return 0;
+    if (scrollTop > end) return 1;
+    return (scrollTop - start) / (end - start);
+  }, []);
+
+  const parsePercentage = useCallback((value: string | number, containerHeight: number) => {
+    if (typeof value === 'string' && value.includes('%')) {
+      return (parseFloat(value) / 100) * containerHeight;
+    }
+    return parseFloat(value as string);
+  }, []);
+
+  const getScrollData = useCallback(() => {
+    if (useWindowScroll) {
+      return {
+        scrollTop: window.scrollY,
+        containerHeight: window.innerHeight,
+        scrollContainer: document.documentElement
+      };
+    } else {
+      const scroller = scrollerRef.current;
+      return {
+        scrollTop: scroller!.scrollTop,
+        containerHeight: scroller!.clientHeight,
+        scrollContainer: scroller!
+      };
+    }
+  }, [useWindowScroll]);
+
+  const getElementOffset = useCallback(
+    (element: HTMLElement) => {
+      if (useWindowScroll) {
+        const rect = element.getBoundingClientRect();
+        return rect.top + window.scrollY;
+      } else {
+        return element.offsetTop;
+      }
+    },
+    [useWindowScroll]
+  );
+
+  const updateCardTransforms = useCallback(() => {
+    if (!cardsRef.current.length || isUpdatingRef.current) return;
+
+    isUpdatingRef.current = true;
+
+    const { scrollTop, containerHeight } = getScrollData();
+    const stackPositionPx = parsePercentage(stackPosition, containerHeight);
+    const scaleEndPositionPx = parsePercentage(scaleEndPosition, containerHeight);
+
+    const endElement = useWindowScroll
+      ? (document.querySelector('.scroll-stack-end') as HTMLElement)
+      : (scrollerRef.current?.querySelector('.scroll-stack-end') as HTMLElement);
+
+    const endElementTop = endElement ? getElementOffset(endElement) : 0;
+
+    cardsRef.current.forEach((card, i) => {
+      if (!card) return;
+
+      const cardTop = getElementOffset(card);
+      const triggerStart = cardTop - stackPositionPx - itemStackDistance * i;
+      const triggerEnd = cardTop - scaleEndPositionPx;
+      const pinStart = cardTop - stackPositionPx - itemStackDistance * i;
+      const pinEnd = endElementTop - containerHeight / 2;
+
+      const scaleProgress = calculateProgress(scrollTop, triggerStart, triggerEnd);
+      const targetScale = baseScale + i * itemScale;
+      const scale = 1 - scaleProgress * (1 - targetScale);
+      const rotation = rotationAmount ? i * rotationAmount * scaleProgress : 0;
+
+      let blur = 0;
+      if (blurAmount) {
+        let topCardIndex = 0;
+        for (let j = 0; j < cardsRef.current.length; j++) {
+          const jCardTop = getElementOffset(cardsRef.current[j]);
+          const jTriggerStart = jCardTop - stackPositionPx - itemStackDistance * j;
+          if (scrollTop >= jTriggerStart) {
+            topCardIndex = j;
+          }
+        }
+
+        if (i < topCardIndex) {
+          const depthInStack = topCardIndex - i;
+          blur = Math.max(0, depthInStack * blurAmount);
+        }
+      }
+
+      let translateY = 0;
+      const isPinned = scrollTop >= pinStart && scrollTop <= pinEnd;
+
+      if (isPinned) {
+        translateY = scrollTop - cardTop + stackPositionPx + itemStackDistance * i;
+      } else if (scrollTop > pinEnd) {
+        translateY = pinEnd - cardTop + stackPositionPx + itemStackDistance * i;
+      }
+
+      const newTransform = {
+        translateY: Math.round(translateY * 100) / 100,
+        scale: Math.round(scale * 1000) / 1000,
+        rotation: Math.round(rotation * 100) / 100,
+        blur: Math.round(blur * 100) / 100
+      };
+
+      const lastTransform = lastTransformsRef.current.get(i);
+      const hasChanged =
+        !lastTransform ||
+        Math.abs(lastTransform.translateY - newTransform.translateY) > 0.1 ||
+        Math.abs(lastTransform.scale - newTransform.scale) > 0.001 ||
+        Math.abs(lastTransform.rotation - newTransform.rotation) > 0.1 ||
+        Math.abs(lastTransform.blur - newTransform.blur) > 0.1;
+
+      if (hasChanged) {
+        const transform = `translate3d(0, ${newTransform.translateY}px, 0) scale(${newTransform.scale}) rotate(${newTransform.rotation}deg)`;
+        const filter = newTransform.blur > 0 ? `blur(${newTransform.blur}px)` : '';
+
+        card.style.transform = transform;
+        card.style.filter = filter;
+
+        lastTransformsRef.current.set(i, newTransform);
+      }
+
+      if (i === cardsRef.current.length - 1) {
+        const isInView = scrollTop >= pinStart && scrollTop <= pinEnd;
+        if (isInView && !stackCompletedRef.current) {
+          stackCompletedRef.current = true;
+          onStackComplete?.();
+        } else if (!isInView && stackCompletedRef.current) {
+          stackCompletedRef.current = false;
+        }
+      }
+    });
+
+    isUpdatingRef.current = false;
+  }, [
+    itemScale,
+    itemStackDistance,
+    stackPosition,
+    scaleEndPosition,
+    baseScale,
+    rotationAmount,
+    blurAmount,
+    useWindowScroll,
+    onStackComplete,
+    calculateProgress,
+    parsePercentage,
+    getScrollData,
+    getElementOffset
+  ]);
+
+  const handleScroll = useCallback(() => {
+    updateCardTransforms();
+  }, [updateCardTransforms]);
+
+  const setupLenis = useCallback(() => {
+    if (useWindowScroll) {
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        touchMultiplier: 2,
+        infinite: false,
+        wheelMultiplier: 1,
+        lerp: 0.1,
+        syncTouch: true,
+        syncTouchLerp: 0.075
+      });
+
+      lenis.on('scroll', handleScroll);
+
+      const raf = (time: number) => {
+        lenis.raf(time);
+        animationFrameRef.current = requestAnimationFrame(raf);
+      };
+      animationFrameRef.current = requestAnimationFrame(raf);
+
+      lenisRef.current = lenis;
+      return lenis;
+    } else {
+      const scroller = scrollerRef.current;
+      if (!scroller) return;
+
+      const lenis = new Lenis({
+        wrapper: scroller,
+        content: scroller.querySelector('.scroll-stack-inner') as HTMLElement,
+        duration: 1.2,
+        easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+        touchMultiplier: 2,
+        infinite: false,
+        gestureOrientation: 'vertical',
+        wheelMultiplier: 1,
+        lerp: 0.1,
+        syncTouch: true,
+        syncTouchLerp: 0.075
+      });
+
+      lenis.on('scroll', handleScroll);
+
+      const raf = (time: number) => {
+        lenis.raf(time);
+        animationFrameRef.current = requestAnimationFrame(raf);
+      };
+      animationFrameRef.current = requestAnimationFrame(raf);
+
+      lenisRef.current = lenis;
+      return lenis;
+    }
+  }, [handleScroll, useWindowScroll]);
+
+  useLayoutEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+
+    const cards = Array.from(
+      useWindowScroll
+        ? document.querySelectorAll('.scroll-stack-card')
+        : scroller.querySelectorAll('.scroll-stack-card')
+    ) as HTMLElement[];
+
+    cardsRef.current = cards;
+    const transformsCache = lastTransformsRef.current;
+
+    cards.forEach((card, i) => {
+      if (i < cards.length - 1) {
+        card.style.marginBottom = `${itemDistance}px`;
+      }
+      card.style.willChange = 'transform, filter';
+      card.style.transformOrigin = 'top center';
+      card.style.backfaceVisibility = 'hidden';
+      card.style.transform = 'translateZ(0)';
+      card.style.webkitTransform = 'translateZ(0)';
+      card.style.perspective = '1000px';
+      card.style.webkitPerspective = '1000px';
+    });
+
+    setupLenis();
+
+    updateCardTransforms();
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+      }
+      stackCompletedRef.current = false;
+      cardsRef.current = [];
+      transformsCache.clear();
+      isUpdatingRef.current = false;
+    };
+  }, [
+    itemDistance,
+    itemScale,
+    itemStackDistance,
+    stackPosition,
+    scaleEndPosition,
+    baseScale,
+    scaleDuration,
+    rotationAmount,
+    blurAmount,
+    useWindowScroll,
+    onStackComplete,
+    setupLenis,
+    updateCardTransforms
+  ]);
+
+  return (
+    <div className={`scroll-stack-scroller ${className}`.trim()} ref={scrollerRef}>
+      <div className="scroll-stack-inner">
+        {children}
+        {/* Spacer so the last pin can release cleanly */}
+        <div className="scroll-stack-end" />
+      </div>
+    </div>
+  );
+};
+
+export default ScrollStack;
+.scroll-stack-scroller {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: visible;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: scroll-position;
+}
+
+.scroll-stack-inner {
+  padding: 20vh 5rem 50rem;
+  min-height: 100vh;
+}
+
+.scroll-stack-card-wrapper {
+  position: relative;
+}
+
+.scroll-stack-card {
+  transform-origin: top center;
+  will-change: transform, filter;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+  height: 20rem;
+  width: 100%;
+  margin: 30px 0;
+  padding: 3rem;
+  border-radius: 40px;
+  box-sizing: border-box;
+  /* Improve mobile performance */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  position: relative;
+}
+
+.scroll-stack-end {
+  width: 100%;
+  height: 1px;
+}
+FLUID GLASS:
+npx shadcn@latest add @react-bits/FluidGlass-TS-CSS
+USAGE:
+// IMPORTANT INFO BELOW
+// This component requires a 3D model to function correctly.
+// You can find three example models in the 'public/assets/3d' directory of the repository:
+// - 'lens.glb'
+// - 'bar.glb'
+// - 'cube.glb'
+// Make sure to place these models in the correct directory or update the paths accordingly.
+
+import FluidGlass from './FluidGlass'
+
+<div style={{ height: '600px', position: 'relative' }}>
+  <FluidGlass 
+    mode="lens" // or "bar", "cube"
+    lensProps={{
+      scale: 0.25,
+      ior: 1.15,
+      thickness: 5,
+      chromaticAberration: 0.1,
+      anisotropy: 0.01  
+    }}
+    barProps={} // add specific props if using bar mode
+    cubeProps={} // add specific props if using cube mode
+  />
+</div>
+/* eslint-disable react/no-unknown-property */
+import * as THREE from 'three';
+import { useRef, useState, useEffect, memo, ReactNode } from 'react';
+import { Canvas, createPortal, useFrame, useThree, ThreeElements } from '@react-three/fiber';
+import {
+  useFBO,
+  useGLTF,
+  useScroll,
+  Image,
+  Scroll,
+  Preload,
+  ScrollControls,
+  MeshTransmissionMaterial,
+  Text
+} from '@react-three/drei';
+import { easing } from 'maath';
+
+type Mode = 'lens' | 'bar' | 'cube';
+
+interface NavItem {
+  label: string;
+  link: string;
+}
+
+type ModeProps = Record<string, unknown>;
+
+interface FluidGlassProps {
+  mode?: Mode;
+  lensProps?: ModeProps;
+  barProps?: ModeProps;
+  cubeProps?: ModeProps;
+}
+
+export default function FluidGlass({ mode = 'lens', lensProps = {}, barProps = {}, cubeProps = {} }: FluidGlassProps) {
+  const Wrapper = mode === 'bar' ? Bar : mode === 'cube' ? Cube : Lens;
+  const rawOverrides = mode === 'bar' ? barProps : mode === 'cube' ? cubeProps : lensProps;
+
+  const {
+    navItems = [
+      { label: 'Home', link: '' },
+      { label: 'About', link: '' },
+      { label: 'Contact', link: '' }
+    ],
+    ...modeProps
+  } = rawOverrides;
+
+  return (
+    <Canvas camera={{ position: [0, 0, 20], fov: 15 }} gl={{ alpha: true }}>
+      <ScrollControls damping={0.2} pages={3} distance={0.4}>
+        {mode === 'bar' && <NavItems items={navItems as NavItem[]} />}
+        <Wrapper modeProps={modeProps}>
+          <Scroll>
+            <Typography />
+            <Images />
+          </Scroll>
+          <Scroll html />
+          <Preload />
+        </Wrapper>
+      </ScrollControls>
+    </Canvas>
+  );
+}
+
+type MeshProps = ThreeElements['mesh'];
+
+interface ModeWrapperProps extends MeshProps {
+  children?: ReactNode;
+  glb: string;
+  geometryKey: string;
+  lockToBottom?: boolean;
+  followPointer?: boolean;
+  modeProps?: ModeProps;
+}
+
+interface ZoomMaterial extends THREE.Material {
+  zoom: number;
+}
+
+interface ZoomMesh extends THREE.Mesh<THREE.BufferGeometry, ZoomMaterial> {}
+
+type ZoomGroup = THREE.Group & { children: ZoomMesh[] };
+
+const ModeWrapper = memo(function ModeWrapper({
+  children,
+  glb,
+  geometryKey,
+  lockToBottom = false,
+  followPointer = true,
+  modeProps = {},
+  ...props
+}: ModeWrapperProps) {
+  const ref = useRef<THREE.Mesh>(null!);
+  const { nodes } = useGLTF(glb);
+  const buffer = useFBO();
+  const { viewport: vp } = useThree();
+  const [scene] = useState<THREE.Scene>(() => new THREE.Scene());
+  const geoWidthRef = useRef<number>(1);
+
+  useEffect(() => {
+    const geo = (nodes[geometryKey] as THREE.Mesh)?.geometry;
+    geo.computeBoundingBox();
+    geoWidthRef.current = geo.boundingBox!.max.x - geo.boundingBox!.min.x || 1;
+  }, [nodes, geometryKey]);
+
+  useFrame((state, delta) => {
+    const { gl, viewport, pointer, camera } = state;
+    const v = viewport.getCurrentViewport(camera, [0, 0, 15]);
+
+    const destX = followPointer ? (pointer.x * v.width) / 2 : 0;
+    const destY = lockToBottom ? -v.height / 2 + 0.2 : followPointer ? (pointer.y * v.height) / 2 : 0;
+    easing.damp3(ref.current.position, [destX, destY, 15], 0.15, delta);
+
+    if ((modeProps as { scale?: number }).scale == null) {
+      const maxWorld = v.width * 0.9;
+      const desired = maxWorld / geoWidthRef.current;
+      ref.current.scale.setScalar(Math.min(0.15, desired));
+    }
+
+    gl.setRenderTarget(buffer);
+    gl.render(scene, camera);
+    gl.setRenderTarget(null);
+    gl.setClearColor(0x5227ff, 1);
+  });
+
+  const { scale, ior, thickness, anisotropy, chromaticAberration, ...extraMat } = modeProps as {
+    scale?: number;
+    ior?: number;
+    thickness?: number;
+    anisotropy?: number;
+    chromaticAberration?: number;
+    [key: string]: unknown;
+  };
+
+  return (
+    <>
+      {createPortal(children, scene)}
+      <mesh scale={[vp.width, vp.height, 1]}>
+        <planeGeometry />
+        <meshBasicMaterial map={buffer.texture} transparent />
+      </mesh>
+      <mesh
+        ref={ref}
+        scale={scale ?? 0.15}
+        rotation-x={Math.PI / 2}
+        geometry={(nodes[geometryKey] as THREE.Mesh)?.geometry}
+        {...props}
+      >
+        <MeshTransmissionMaterial
+          buffer={buffer.texture}
+          ior={ior ?? 1.15}
+          thickness={thickness ?? 5}
+          anisotropy={anisotropy ?? 0.01}
+          chromaticAberration={chromaticAberration ?? 0.1}
+          {...(typeof extraMat === 'object' && extraMat !== null ? extraMat : {})}
+        />
+      </mesh>
+    </>
+  );
+});
+
+function Lens({ modeProps, ...p }: { modeProps?: ModeProps } & MeshProps) {
+  return <ModeWrapper glb="/assets/3d/lens.glb" geometryKey="Cylinder" followPointer modeProps={modeProps} {...p} />;
+}
+
+function Cube({ modeProps, ...p }: { modeProps?: ModeProps } & MeshProps) {
+  return <ModeWrapper glb="/assets/3d/cube.glb" geometryKey="Cube" followPointer modeProps={modeProps} {...p} />;
+}
+
+function Bar({ modeProps = {}, ...p }: { modeProps?: ModeProps } & MeshProps) {
+  const defaultMat = {
+    transmission: 1,
+    roughness: 0,
+    thickness: 10,
+    ior: 1.15,
+    color: '#ffffff',
+    attenuationColor: '#ffffff',
+    attenuationDistance: 0.25
+  };
+
+  return (
+    <ModeWrapper
+      glb="/assets/3d/bar.glb"
+      geometryKey="Cube"
+      lockToBottom
+      followPointer={false}
+      modeProps={{ ...defaultMat, ...modeProps }}
+      {...p}
+    />
+  );
+}
+
+function NavItems({ items }: { items: NavItem[] }) {
+  const group = useRef<THREE.Group>(null!);
+  const { viewport, camera } = useThree();
+
+  const DEVICE = {
+    mobile: { max: 639, spacing: 0.2, fontSize: 0.035 },
+    tablet: { max: 1023, spacing: 0.24, fontSize: 0.045 },
+    desktop: { max: Infinity, spacing: 0.3, fontSize: 0.045 }
+  };
+  const getDevice = () => {
+    const w = window.innerWidth;
+    return w <= DEVICE.mobile.max ? 'mobile' : w <= DEVICE.tablet.max ? 'tablet' : 'desktop';
+  };
+
+  const [device, setDevice] = useState<keyof typeof DEVICE>(getDevice());
+
+  useEffect(() => {
+    const onResize = () => setDevice(getDevice());
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const { spacing, fontSize } = DEVICE[device];
+
+  useFrame(() => {
+    if (!group.current) return;
+    const v = viewport.getCurrentViewport(camera, [0, 0, 15]);
+    group.current.position.set(0, -v.height / 2 + 0.2, 15.1);
+
+    group.current.children.forEach((child, i) => {
+      child.position.x = (i - (items.length - 1) / 2) * spacing;
+    });
+  });
+
+  const handleNavigate = (link: string) => {
+    if (!link) return;
+    link.startsWith('#') ? (window.location.hash = link) : (window.location.href = link);
+  };
+
+  return (
+    <group ref={group} renderOrder={10}>
+      {items.map(({ label, link }) => (
+        <Text
+          key={label}
+          fontSize={fontSize}
+          color="white"
+          anchorX="center"
+          anchorY="middle"
+          outlineWidth={0}
+          outlineBlur="20%"
+          outlineColor="#000"
+          outlineOpacity={0.5}
+          renderOrder={10}
+          onClick={e => {
+            e.stopPropagation();
+            handleNavigate(link);
+          }}
+          onPointerOver={() => (document.body.style.cursor = 'pointer')}
+          onPointerOut={() => (document.body.style.cursor = 'auto')}
+        >
+          {label}
+        </Text>
+      ))}
+    </group>
+  );
+}
+
+function Images() {
+  const group = useRef<ZoomGroup>(null!);
+  const data = useScroll();
+  const { height } = useThree(s => s.viewport);
+
+  useFrame(() => {
+    group.current.children[0].material.zoom = 1 + data.range(0, 1 / 3) / 3;
+    group.current.children[1].material.zoom = 1 + data.range(0, 1 / 3) / 3;
+    group.current.children[2].material.zoom = 1 + data.range(1.15 / 3, 1 / 3) / 2;
+    group.current.children[3].material.zoom = 1 + data.range(1.15 / 3, 1 / 3) / 2;
+    group.current.children[4].material.zoom = 1 + data.range(1.15 / 3, 1 / 3) / 2;
+  });
+
+  return (
+    <group ref={group}>
+      <Image position={[-2, 0, 0]} scale={[3, height / 1.1]} url="/assets/demo/cs1.webp" />
+      <Image position={[2, 0, 3]} scale={3} url="/assets/demo/cs2.webp" />
+      <Image position={[-2.05, -height, 6]} scale={[1, 3]} url="/assets/demo/cs3.webp" />
+      <Image position={[-0.6, -height, 9]} scale={[1, 2]} url="/assets/demo/cs1.webp" />
+      <Image position={[0.75, -height, 10.5]} scale={1.5} url="/assets/demo/cs2.webp" />
+    </group>
+  );
+}
+
+function Typography() {
+  const DEVICE = {
+    mobile: { fontSize: 0.2 },
+    tablet: { fontSize: 0.4 },
+    desktop: { fontSize: 0.6 }
+  };
+  const getDevice = () => {
+    const w = window.innerWidth;
+    return w <= 639 ? 'mobile' : w <= 1023 ? 'tablet' : 'desktop';
+  };
+
+  const [device, setDevice] = useState<keyof typeof DEVICE>(getDevice());
+
+  useEffect(() => {
+    const onResize = () => setDevice(getDevice());
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const { fontSize } = DEVICE[device];
+
+  return (
+    <Text
+      position={[0, 0, 12]}
+      fontSize={fontSize}
+      letterSpacing={-0.05}
+      outlineWidth={0}
+      outlineBlur="20%"
+      outlineColor="#000"
+      outlineOpacity={0.5}
+      color="white"
+      anchorX="center"
+      anchorY="middle"
+    >
+      React Bits
+    </Text>
+  );
+}
+
+INFINITE MENU:
+npx shadcn@latest add @react-bits/InfiniteMenu-TS-CSS
+USAGE:
+import InfiniteMenu from './InfiniteMenu'
+
+const items = [
+  {
+    image: 'https://picsum.photos/300/300?grayscale',
+    link: 'https://google.com/',
+    title: 'Item 1',
+    description: 'This is pretty cool, right?'
+  },
+  {
+    image: 'https://picsum.photos/400/400?grayscale',
+    link: 'https://google.com/',
+    title: 'Item 2',
+    description: 'This is pretty cool, right?'
+  },
+  {
+    image: 'https://picsum.photos/500/500?grayscale',
+    link: 'https://google.com/',
+    title: 'Item 3',
+    description: 'This is pretty cool, right?'
+  },
+  {
+    image: 'https://picsum.photos/600/600?grayscale',
+    link: 'https://google.com/',
+    title: 'Item 4',
+    description: 'This is pretty cool, right?'
+  }
+];
+
+<div style={{ height: '600px', position: 'relative' }}>
+  <InfiniteMenu items={items}/>
+</div>
+
+CODE:
+import { FC, useRef, useState, useEffect, MutableRefObject } from 'react';
+import { mat4, quat, vec2, vec3 } from 'gl-matrix';
+import './InfiniteMenu.css';
+
+const discVertShaderSource = `#version 300 es
+
+uniform mat4 uWorldMatrix;
+uniform mat4 uViewMatrix;
+uniform mat4 uProjectionMatrix;
+uniform vec3 uCameraPosition;
+uniform vec4 uRotationAxisVelocity;
+
+in vec3 aModelPosition;
+in vec3 aModelNormal;
+in vec2 aModelUvs;
+in mat4 aInstanceMatrix;
+
+out vec2 vUvs;
+out float vAlpha;
+flat out int vInstanceId;
+
+#define PI 3.141593
+
+void main() {
+    vec4 worldPosition = uWorldMatrix * aInstanceMatrix * vec4(aModelPosition, 1.);
+
+    vec3 centerPos = (uWorldMatrix * aInstanceMatrix * vec4(0., 0., 0., 1.)).xyz;
+    float radius = length(centerPos.xyz);
+
+    if (gl_VertexID > 0) {
+        vec3 rotationAxis = uRotationAxisVelocity.xyz;
+        float rotationVelocity = min(.15, uRotationAxisVelocity.w * 15.);
+        vec3 stretchDir = normalize(cross(centerPos, rotationAxis));
+        vec3 relativeVertexPos = normalize(worldPosition.xyz - centerPos);
+        float strength = dot(stretchDir, relativeVertexPos);
+        float invAbsStrength = min(0., abs(strength) - 1.);
+        strength = rotationVelocity * sign(strength) * abs(invAbsStrength * invAbsStrength * invAbsStrength + 1.);
+        worldPosition.xyz += stretchDir * strength;
+    }
+
+    worldPosition.xyz = radius * normalize(worldPosition.xyz);
+
+    gl_Position = uProjectionMatrix * uViewMatrix * worldPosition;
+
+    vAlpha = smoothstep(0.5, 1., normalize(worldPosition.xyz).z) * .9 + .1;
+    vUvs = aModelUvs;
+    vInstanceId = gl_InstanceID;
+}
+`;
+
+const discFragShaderSource = `#version 300 es
+precision highp float;
+
+uniform sampler2D uTex;
+uniform int uItemCount;
+uniform int uAtlasSize;
+
+out vec4 outColor;
+
+in vec2 vUvs;
+in float vAlpha;
+flat in int vInstanceId;
+
+void main() {
+    int itemIndex = vInstanceId % uItemCount;
+    int cellsPerRow = uAtlasSize;
+    int cellX = itemIndex % cellsPerRow;
+    int cellY = itemIndex / cellsPerRow;
+    vec2 cellSize = vec2(1.0) / vec2(float(cellsPerRow));
+    vec2 cellOffset = vec2(float(cellX), float(cellY)) * cellSize;
+
+    ivec2 texSize = textureSize(uTex, 0);
+    float imageAspect = float(texSize.x) / float(texSize.y);
+    float containerAspect = 1.0;
+    
+    float scale = max(imageAspect / containerAspect, 
+                     containerAspect / imageAspect);
+    
+    vec2 st = vec2(vUvs.x, 1.0 - vUvs.y);
+    st = (st - 0.5) * scale + 0.5;
+    
+    st = clamp(st, 0.0, 1.0);
+    
+    st = st * cellSize + cellOffset;
+    
+    outColor = texture(uTex, st);
+    outColor.a *= vAlpha;
+}
+`;
+
+class Face {
+  public a: number;
+  public b: number;
+  public c: number;
+
+  constructor(a: number, b: number, c: number) {
+    this.a = a;
+    this.b = b;
+    this.c = c;
+  }
+}
+
+class Vertex {
+  public position: vec3;
+  public normal: vec3;
+  public uv: vec2;
+
+  constructor(x: number, y: number, z: number) {
+    this.position = vec3.fromValues(x, y, z);
+    this.normal = vec3.create();
+    this.uv = vec2.create();
+  }
+}
+
+class Geometry {
+  public vertices: Vertex[];
+  public faces: Face[];
+
+  constructor() {
+    this.vertices = [];
+    this.faces = [];
+  }
+
+  public addVertex(...args: number[]): this {
+    for (let i = 0; i < args.length; i += 3) {
+      this.vertices.push(new Vertex(args[i], args[i + 1], args[i + 2]));
+    }
+    return this;
+  }
+
+  public addFace(...args: number[]): this {
+    for (let i = 0; i < args.length; i += 3) {
+      this.faces.push(new Face(args[i], args[i + 1], args[i + 2]));
+    }
+    return this;
+  }
+
+  public get lastVertex(): Vertex {
+    return this.vertices[this.vertices.length - 1];
+  }
+
+  public subdivide(divisions = 1): this {
+    const midPointCache: Record<string, number> = {};
+    let f = this.faces;
+
+    for (let div = 0; div < divisions; ++div) {
+      const newFaces = new Array<Face>(f.length * 4);
+
+      f.forEach((face, ndx) => {
+        const mAB = this.getMidPoint(face.a, face.b, midPointCache);
+        const mBC = this.getMidPoint(face.b, face.c, midPointCache);
+        const mCA = this.getMidPoint(face.c, face.a, midPointCache);
+
+        const i = ndx * 4;
+        newFaces[i + 0] = new Face(face.a, mAB, mCA);
+        newFaces[i + 1] = new Face(face.b, mBC, mAB);
+        newFaces[i + 2] = new Face(face.c, mCA, mBC);
+        newFaces[i + 3] = new Face(mAB, mBC, mCA);
+      });
+
+      f = newFaces;
+    }
+
+    this.faces = f;
+    return this;
+  }
+
+  public spherize(radius = 1): this {
+    this.vertices.forEach(vertex => {
+      vec3.normalize(vertex.normal, vertex.position);
+      vec3.scale(vertex.position, vertex.normal, radius);
+    });
+    return this;
+  }
+
+  public get data(): {
+    vertices: Float32Array;
+    indices: Uint16Array;
+    normals: Float32Array;
+    uvs: Float32Array;
+  } {
+    return {
+      vertices: this.vertexData,
+      indices: this.indexData,
+      normals: this.normalData,
+      uvs: this.uvData
+    };
+  }
+
+  public get vertexData(): Float32Array {
+    return new Float32Array(this.vertices.flatMap(v => Array.from(v.position)));
+  }
+
+  public get normalData(): Float32Array {
+    return new Float32Array(this.vertices.flatMap(v => Array.from(v.normal)));
+  }
+
+  public get uvData(): Float32Array {
+    return new Float32Array(this.vertices.flatMap(v => Array.from(v.uv)));
+  }
+
+  public get indexData(): Uint16Array {
+    return new Uint16Array(this.faces.flatMap(f => [f.a, f.b, f.c]));
+  }
+
+  public getMidPoint(ndxA: number, ndxB: number, cache: Record<string, number>): number {
+    const cacheKey = ndxA < ndxB ? `k_${ndxB}_${ndxA}` : `k_${ndxA}_${ndxB}`;
+    if (Object.prototype.hasOwnProperty.call(cache, cacheKey)) {
+      return cache[cacheKey];
+    }
+    const a = this.vertices[ndxA].position;
+    const b = this.vertices[ndxB].position;
+    const ndx = this.vertices.length;
+    cache[cacheKey] = ndx;
+    this.addVertex((a[0] + b[0]) * 0.5, (a[1] + b[1]) * 0.5, (a[2] + b[2]) * 0.5);
+    return ndx;
+  }
+}
+
+class IcosahedronGeometry extends Geometry {
+  constructor() {
+    super();
+    const t = Math.sqrt(5) * 0.5 + 0.5;
+    this.addVertex(
+      -1,
+      t,
+      0,
+      1,
+      t,
+      0,
+      -1,
+      -t,
+      0,
+      1,
+      -t,
+      0,
+      0,
+      -1,
+      t,
+      0,
+      1,
+      t,
+      0,
+      -1,
+      -t,
+      0,
+      1,
+      -t,
+      t,
+      0,
+      -1,
+      t,
+      0,
+      1,
+      -t,
+      0,
+      -1,
+      -t,
+      0,
+      1
+    ).addFace(
+      0,
+      11,
+      5,
+      0,
+      5,
+      1,
+      0,
+      1,
+      7,
+      0,
+      7,
+      10,
+      0,
+      10,
+      11,
+      1,
+      5,
+      9,
+      5,
+      11,
+      4,
+      11,
+      10,
+      2,
+      10,
+      7,
+      6,
+      7,
+      1,
+      8,
+      3,
+      9,
+      4,
+      3,
+      4,
+      2,
+      3,
+      2,
+      6,
+      3,
+      6,
+      8,
+      3,
+      8,
+      9,
+      4,
+      9,
+      5,
+      2,
+      4,
+      11,
+      6,
+      2,
+      10,
+      8,
+      6,
+      7,
+      9,
+      8,
+      1
+    );
+  }
+}
+
+class DiscGeometry extends Geometry {
+  constructor(steps = 4, radius = 1) {
+    super();
+    const safeSteps = Math.max(4, steps);
+    const alpha = (2 * Math.PI) / safeSteps;
+
+    this.addVertex(0, 0, 0);
+    this.lastVertex.uv[0] = 0.5;
+    this.lastVertex.uv[1] = 0.5;
+
+    for (let i = 0; i < safeSteps; ++i) {
+      const x = Math.cos(alpha * i);
+      const y = Math.sin(alpha * i);
+      this.addVertex(radius * x, radius * y, 0);
+      this.lastVertex.uv[0] = x * 0.5 + 0.5;
+      this.lastVertex.uv[1] = y * 0.5 + 0.5;
+
+      if (i > 0) {
+        this.addFace(0, i, i + 1);
+      }
+    }
+    this.addFace(0, safeSteps, 1);
+  }
+}
+
+function createShader(gl: WebGL2RenderingContext, type: number, source: string): WebGLShader | null {
+  const shader = gl.createShader(type);
+  if (!shader) return null;
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+  const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+
+  if (success) {
+    return shader;
+  }
+
+  console.error(gl.getShaderInfoLog(shader));
+  gl.deleteShader(shader);
+  return null;
+}
+
+function createProgram(
+  gl: WebGL2RenderingContext,
+  shaderSources: [string, string],
+  transformFeedbackVaryings?: string[] | null,
+  attribLocations?: Record<string, number>
+): WebGLProgram | null {
+  const program = gl.createProgram();
+  if (!program) return null;
+
+  [gl.VERTEX_SHADER, gl.FRAGMENT_SHADER].forEach((type, ndx) => {
+    const shader = createShader(gl, type, shaderSources[ndx]);
+    if (shader) {
+      gl.attachShader(program, shader);
+    }
+  });
+
+  if (transformFeedbackVaryings) {
+    gl.transformFeedbackVaryings(program, transformFeedbackVaryings, gl.SEPARATE_ATTRIBS);
+  }
+
+  if (attribLocations) {
+    for (const attrib in attribLocations) {
+      if (Object.prototype.hasOwnProperty.call(attribLocations, attrib)) {
+        gl.bindAttribLocation(program, attribLocations[attrib], attrib);
+      }
+    }
+  }
+
+  gl.linkProgram(program);
+  const success = gl.getProgramParameter(program, gl.LINK_STATUS);
+
+  if (success) {
+    return program;
+  }
+
+  console.error(gl.getProgramInfoLog(program));
+  gl.deleteProgram(program);
+  return null;
+}
+
+function makeVertexArray(
+  gl: WebGL2RenderingContext,
+  bufLocNumElmPairs: Array<[WebGLBuffer, number, number]>,
+  indices?: Uint16Array
+): WebGLVertexArrayObject | null {
+  const va = gl.createVertexArray();
+  if (!va) return null;
+
+  gl.bindVertexArray(va);
+
+  for (const [buffer, loc, numElem] of bufLocNumElmPairs) {
+    if (loc === -1) continue;
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, numElem, gl.FLOAT, false, 0, 0);
+  }
+
+  if (indices) {
+    const indexBuffer = gl.createBuffer();
+    if (indexBuffer) {
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+    }
+  }
+
+  gl.bindVertexArray(null);
+  return va;
+}
+
+function resizeCanvasToDisplaySize(canvas: HTMLCanvasElement): boolean {
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const displayWidth = Math.round(canvas.clientWidth * dpr);
+  const displayHeight = Math.round(canvas.clientHeight * dpr);
+  const needResize = canvas.width !== displayWidth || canvas.height !== displayHeight;
+  if (needResize) {
+    canvas.width = displayWidth;
+    canvas.height = displayHeight;
+  }
+  return needResize;
+}
+
+function makeBuffer(gl: WebGL2RenderingContext, sizeOrData: number | ArrayBufferView, usage: number): WebGLBuffer {
+  const buf = gl.createBuffer();
+  if (!buf) {
+    throw new Error('Failed to create WebGL buffer.');
+  }
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+
+  if (typeof sizeOrData === 'number') {
+    gl.bufferData(gl.ARRAY_BUFFER, sizeOrData, usage);
+  } else {
+    gl.bufferData(gl.ARRAY_BUFFER, sizeOrData, usage);
+  }
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, null);
+  return buf;
+}
+
+function createAndSetupTexture(
+  gl: WebGL2RenderingContext,
+  minFilter: number,
+  magFilter: number,
+  wrapS: number,
+  wrapT: number
+): WebGLTexture {
+  const texture = gl.createTexture();
+  if (!texture) {
+    throw new Error('Failed to create WebGL texture.');
+  }
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wrapS);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wrapT);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, minFilter);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, magFilter);
+  return texture;
+}
+
+type UpdateCallback = (deltaTime: number) => void;
+
+class ArcballControl {
+  private canvas: HTMLCanvasElement;
+  private updateCallback: UpdateCallback;
+
+  public isPointerDown = false;
+  public orientation = quat.create();
+  public pointerRotation = quat.create();
+  public rotationVelocity = 0;
+  public rotationAxis = vec3.fromValues(1, 0, 0);
+
+  public snapDirection = vec3.fromValues(0, 0, -1);
+  public snapTargetDirection: vec3 | null = null;
+
+  private pointerPos = vec2.create();
+  private previousPointerPos = vec2.create();
+  private _rotationVelocity = 0;
+  private _combinedQuat = quat.create();
+
+  private readonly EPSILON = 0.1;
+  private readonly IDENTITY_QUAT = quat.create();
+
+  constructor(canvas: HTMLCanvasElement, updateCallback?: UpdateCallback) {
+    this.canvas = canvas;
+    this.updateCallback = updateCallback || (() => undefined);
+
+    canvas.addEventListener('pointerdown', (e: PointerEvent) => {
+      vec2.set(this.pointerPos, e.clientX, e.clientY);
+      vec2.copy(this.previousPointerPos, this.pointerPos);
+      this.isPointerDown = true;
+    });
+    canvas.addEventListener('pointerup', () => {
+      this.isPointerDown = false;
+    });
+    canvas.addEventListener('pointerleave', () => {
+      this.isPointerDown = false;
+    });
+    canvas.addEventListener('pointermove', (e: PointerEvent) => {
+      if (this.isPointerDown) {
+        vec2.set(this.pointerPos, e.clientX, e.clientY);
+      }
+    });
+
+    canvas.style.touchAction = 'none';
+  }
+
+  public update(deltaTime: number, targetFrameDuration = 16): void {
+    const timeScale = deltaTime / targetFrameDuration + 0.00001;
+    let angleFactor = timeScale;
+    const snapRotation = quat.create();
+
+    if (this.isPointerDown) {
+      const INTENSITY = 0.3 * timeScale;
+      const ANGLE_AMPLIFICATION = 5 / timeScale;
+
+      const midPointerPos = vec2.sub(vec2.create(), this.pointerPos, this.previousPointerPos);
+      vec2.scale(midPointerPos, midPointerPos, INTENSITY);
+
+      if (vec2.sqrLen(midPointerPos) > this.EPSILON) {
+        vec2.add(midPointerPos, this.previousPointerPos, midPointerPos);
+
+        const p = this.project(midPointerPos);
+        const q = this.project(this.previousPointerPos);
+        const a = vec3.normalize(vec3.create(), p);
+        const b = vec3.normalize(vec3.create(), q);
+
+        vec2.copy(this.previousPointerPos, midPointerPos);
+
+        angleFactor *= ANGLE_AMPLIFICATION;
+
+        this.quatFromVectors(a, b, this.pointerRotation, angleFactor);
+      } else {
+        quat.slerp(this.pointerRotation, this.pointerRotation, this.IDENTITY_QUAT, INTENSITY);
+      }
+    } else {
+      const INTENSITY = 0.1 * timeScale;
+      quat.slerp(this.pointerRotation, this.pointerRotation, this.IDENTITY_QUAT, INTENSITY);
+
+      if (this.snapTargetDirection) {
+        const SNAPPING_INTENSITY = 0.2;
+        const a = this.snapTargetDirection;
+        const b = this.snapDirection;
+        const sqrDist = vec3.squaredDistance(a, b);
+        const distanceFactor = Math.max(0.1, 1 - sqrDist * 10);
+        angleFactor *= SNAPPING_INTENSITY * distanceFactor;
+        this.quatFromVectors(a, b, snapRotation, angleFactor);
+      }
+    }
+
+    const combinedQuat = quat.multiply(quat.create(), snapRotation, this.pointerRotation);
+    this.orientation = quat.multiply(quat.create(), combinedQuat, this.orientation);
+    quat.normalize(this.orientation, this.orientation);
+
+    const RA_INTENSITY = 0.8 * timeScale;
+    quat.slerp(this._combinedQuat, this._combinedQuat, combinedQuat, RA_INTENSITY);
+    quat.normalize(this._combinedQuat, this._combinedQuat);
+
+    const rad = Math.acos(this._combinedQuat[3]) * 2.0;
+    const s = Math.sin(rad / 2.0);
+    let rv = 0;
+    if (s > 0.000001) {
+      rv = rad / (2 * Math.PI);
+      this.rotationAxis[0] = this._combinedQuat[0] / s;
+      this.rotationAxis[1] = this._combinedQuat[1] / s;
+      this.rotationAxis[2] = this._combinedQuat[2] / s;
+    }
+
+    const RV_INTENSITY = 0.5 * timeScale;
+    this._rotationVelocity += (rv - this._rotationVelocity) * RV_INTENSITY;
+    this.rotationVelocity = this._rotationVelocity / timeScale;
+
+    this.updateCallback(deltaTime);
+  }
+
+  private quatFromVectors(a: vec3, b: vec3, out: quat, angleFactor = 1): { q: quat; axis: vec3; angle: number } {
+    const axis = vec3.cross(vec3.create(), a, b);
+    vec3.normalize(axis, axis);
+    const d = Math.max(-1, Math.min(1, vec3.dot(a, b)));
+    const angle = Math.acos(d) * angleFactor;
+    quat.setAxisAngle(out, axis, angle);
+    return { q: out, axis, angle };
+  }
+
+  private project(pos: vec2): vec3 {
+    const r = 2;
+    const w = this.canvas.clientWidth;
+    const h = this.canvas.clientHeight;
+    const s = Math.max(w, h) - 1;
+
+    const x = (2 * pos[0] - w - 1) / s;
+    const y = (2 * pos[1] - h - 1) / s;
+    let z = 0;
+    const xySq = x * x + y * y;
+    const rSq = r * r;
+
+    if (xySq <= rSq / 2.0) {
+      z = Math.sqrt(rSq - xySq);
+    } else {
+      z = rSq / Math.sqrt(xySq);
+    }
+    return vec3.fromValues(-x, y, z);
+  }
+}
+
+interface MenuItem {
+  image: string;
+  link: string;
+  title: string;
+  description: string;
+}
+
+type ActiveItemCallback = (index: number) => void;
+type MovementChangeCallback = (isMoving: boolean) => void;
+type InitCallback = (instance: InfiniteGridMenu) => void;
+
+interface Camera {
+  matrix: mat4;
+  near: number;
+  far: number;
+  fov: number;
+  aspect: number;
+  position: vec3;
+  up: vec3;
+  matrices: {
+    view: mat4;
+    projection: mat4;
+    inversProjection: mat4;
+  };
+}
+
+class InfiniteGridMenu {
+  private gl: WebGL2RenderingContext | null = null;
+  private discProgram: WebGLProgram | null = null;
+  private discVAO: WebGLVertexArrayObject | null = null;
+  private discBuffers!: {
+    vertices: Float32Array;
+    indices: Uint16Array;
+    normals: Float32Array;
+    uvs: Float32Array;
+  };
+  private icoGeo!: IcosahedronGeometry;
+  private discGeo!: DiscGeometry;
+  private worldMatrix = mat4.create();
+  private tex: WebGLTexture | null = null;
+  private control!: ArcballControl;
+
+  private discLocations!: {
+    aModelPosition: number;
+    aModelUvs: number;
+    aInstanceMatrix: number;
+    uWorldMatrix: WebGLUniformLocation | null;
+    uViewMatrix: WebGLUniformLocation | null;
+    uProjectionMatrix: WebGLUniformLocation | null;
+    uCameraPosition: WebGLUniformLocation | null;
+    uScaleFactor: WebGLUniformLocation | null;
+    uRotationAxisVelocity: WebGLUniformLocation | null;
+    uTex: WebGLUniformLocation | null;
+    uFrames: WebGLUniformLocation | null;
+    uItemCount: WebGLUniformLocation | null;
+    uAtlasSize: WebGLUniformLocation | null;
+  };
+
+  private viewportSize = vec2.create();
+  private drawBufferSize = vec2.create();
+
+  private discInstances!: {
+    matricesArray: Float32Array;
+    matrices: Float32Array[];
+    buffer: WebGLBuffer | null;
+  };
+
+  private instancePositions: vec3[] = [];
+  private DISC_INSTANCE_COUNT = 0;
+  private atlasSize = 1;
+
+  private _time = 0;
+  private _deltaTime = 0;
+  private _deltaFrames = 0;
+  private _frames = 0;
+
+  private movementActive = false;
+
+  private TARGET_FRAME_DURATION = 1000 / 60;
+  private SPHERE_RADIUS = 2;
+
+  public camera: Camera = {
+    matrix: mat4.create(),
+    near: 0.1,
+    far: 40,
+    fov: Math.PI / 4,
+    aspect: 1,
+    position: vec3.fromValues(0, 0, 3),
+    up: vec3.fromValues(0, 1, 0),
+    matrices: {
+      view: mat4.create(),
+      projection: mat4.create(),
+      inversProjection: mat4.create()
+    }
+  };
+
+  public smoothRotationVelocity = 0;
+  public scaleFactor = 1.0;
+
+  constructor(
+    private canvas: HTMLCanvasElement,
+    private items: MenuItem[],
+    private onActiveItemChange: ActiveItemCallback,
+    private onMovementChange: MovementChangeCallback,
+    onInit?: InitCallback
+  ) {
+    this.init(onInit);
+  }
+
+  public resize(): void {
+    const needsResize = resizeCanvasToDisplaySize(this.canvas);
+    if (!this.gl) return;
+    if (needsResize) {
+      this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+    }
+    this.updateProjectionMatrix();
+  }
+
+  public run(time = 0): void {
+    this._deltaTime = Math.min(32, time - this._time);
+    this._time = time;
+    this._deltaFrames = this._deltaTime / this.TARGET_FRAME_DURATION;
+    this._frames += this._deltaFrames;
+
+    this.animate(this._deltaTime);
+    this.render();
+
+    requestAnimationFrame(t => this.run(t));
+  }
+
+  private init(onInit?: InitCallback): void {
+    const gl = this.canvas.getContext('webgl2', {
+      antialias: true,
+      alpha: false
+    });
+    if (!gl) {
+      throw new Error('No WebGL 2 context!');
+    }
+    this.gl = gl;
+
+    vec2.set(this.viewportSize, this.canvas.clientWidth, this.canvas.clientHeight);
+    vec2.clone(this.drawBufferSize);
+
+    this.discProgram = createProgram(gl, [discVertShaderSource, discFragShaderSource], null, {
+      aModelPosition: 0,
+      aModelNormal: 1,
+      aModelUvs: 2,
+      aInstanceMatrix: 3
+    });
+
+    this.discLocations = {
+      aModelPosition: gl.getAttribLocation(this.discProgram!, 'aModelPosition'),
+      aModelUvs: gl.getAttribLocation(this.discProgram!, 'aModelUvs'),
+      aInstanceMatrix: gl.getAttribLocation(this.discProgram!, 'aInstanceMatrix'),
+      uWorldMatrix: gl.getUniformLocation(this.discProgram!, 'uWorldMatrix'),
+      uViewMatrix: gl.getUniformLocation(this.discProgram!, 'uViewMatrix'),
+      uProjectionMatrix: gl.getUniformLocation(this.discProgram!, 'uProjectionMatrix'),
+      uCameraPosition: gl.getUniformLocation(this.discProgram!, 'uCameraPosition'),
+      uScaleFactor: gl.getUniformLocation(this.discProgram!, 'uScaleFactor'),
+      uRotationAxisVelocity: gl.getUniformLocation(this.discProgram!, 'uRotationAxisVelocity'),
+      uTex: gl.getUniformLocation(this.discProgram!, 'uTex'),
+      uFrames: gl.getUniformLocation(this.discProgram!, 'uFrames'),
+      uItemCount: gl.getUniformLocation(this.discProgram!, 'uItemCount'),
+      uAtlasSize: gl.getUniformLocation(this.discProgram!, 'uAtlasSize')
+    };
+
+    this.discGeo = new DiscGeometry(56, 1);
+    this.discBuffers = this.discGeo.data;
+    this.discVAO = makeVertexArray(
+      gl,
+      [
+        [makeBuffer(gl, this.discBuffers.vertices, gl.STATIC_DRAW), this.discLocations.aModelPosition, 3],
+        [makeBuffer(gl, this.discBuffers.uvs, gl.STATIC_DRAW), this.discLocations.aModelUvs, 2]
+      ],
+      this.discBuffers.indices
+    );
+
+    this.icoGeo = new IcosahedronGeometry();
+    this.icoGeo.subdivide(1).spherize(this.SPHERE_RADIUS);
+    this.instancePositions = this.icoGeo.vertices.map(v => v.position);
+    this.DISC_INSTANCE_COUNT = this.icoGeo.vertices.length;
+    this.initDiscInstances(this.DISC_INSTANCE_COUNT);
+    this.initTexture();
+
+    this.control = new ArcballControl(this.canvas, deltaTime => this.onControlUpdate(deltaTime));
+
+    this.updateCameraMatrix();
+    this.updateProjectionMatrix();
+
+    this.resize();
+
+    if (onInit) {
+      onInit(this);
+    }
+  }
+
+  private initTexture(): void {
+    if (!this.gl) return;
+    const gl = this.gl;
+    this.tex = createAndSetupTexture(gl, gl.LINEAR, gl.LINEAR, gl.CLAMP_TO_EDGE, gl.CLAMP_TO_EDGE);
+
+    const itemCount = Math.max(1, this.items.length);
+    this.atlasSize = Math.ceil(Math.sqrt(itemCount));
+    const cellSize = 512;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d')!;
+    canvas.width = this.atlasSize * cellSize;
+    canvas.height = this.atlasSize * cellSize;
+
+    Promise.all(
+      this.items.map(
+        item =>
+          new Promise<HTMLImageElement>(resolve => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => resolve(img);
+            img.src = item.image;
+          })
+      )
+    ).then(images => {
+      images.forEach((img, i) => {
+        const x = (i % this.atlasSize) * cellSize;
+        const y = Math.floor(i / this.atlasSize) * cellSize;
+        ctx.drawImage(img, x, y, cellSize, cellSize);
+      });
+
+      gl.bindTexture(gl.TEXTURE_2D, this.tex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, canvas);
+      gl.generateMipmap(gl.TEXTURE_2D);
+    });
+  }
+
+  private initDiscInstances(count: number): void {
+    if (!this.gl || !this.discVAO) return;
+    const gl = this.gl;
+
+    const matricesArray = new Float32Array(count * 16);
+    const matrices: Float32Array[] = [];
+    for (let i = 0; i < count; ++i) {
+      const instanceMatrixArray = new Float32Array(matricesArray.buffer, i * 16 * 4, 16);
+      mat4.identity(instanceMatrixArray as unknown as mat4);
+      matrices.push(instanceMatrixArray);
+    }
+
+    this.discInstances = {
+      matricesArray,
+      matrices,
+      buffer: gl.createBuffer()
+    };
+
+    gl.bindVertexArray(this.discVAO);
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.discInstances.buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, this.discInstances.matricesArray.byteLength, gl.DYNAMIC_DRAW);
+
+    const mat4AttribSlotCount = 4;
+    const bytesPerMatrix = 16 * 4;
+    for (let j = 0; j < mat4AttribSlotCount; ++j) {
+      const loc = this.discLocations.aInstanceMatrix + j;
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 4, gl.FLOAT, false, bytesPerMatrix, j * 4 * 4);
+      gl.vertexAttribDivisor(loc, 1);
+    }
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    gl.bindVertexArray(null);
+  }
+
+  private animate(deltaTime: number): void {
+    if (!this.gl) return;
+    this.control.update(deltaTime, this.TARGET_FRAME_DURATION);
+
+    const positions = this.instancePositions.map(p => vec3.transformQuat(vec3.create(), p, this.control.orientation));
+    const scale = 0.25;
+    const SCALE_INTENSITY = 0.6;
+
+    positions.forEach((p, ndx) => {
+      const s = (Math.abs(p[2]) / this.SPHERE_RADIUS) * SCALE_INTENSITY + (1 - SCALE_INTENSITY);
+      const finalScale = s * scale;
+      const matrix = mat4.create();
+
+      mat4.multiply(matrix, matrix, mat4.fromTranslation(mat4.create(), vec3.negate(vec3.create(), p)));
+      mat4.multiply(matrix, matrix, mat4.targetTo(mat4.create(), [0, 0, 0], p, [0, 1, 0]));
+      mat4.multiply(matrix, matrix, mat4.fromScaling(mat4.create(), [finalScale, finalScale, finalScale]));
+      mat4.multiply(matrix, matrix, mat4.fromTranslation(mat4.create(), [0, 0, -this.SPHERE_RADIUS]));
+
+      mat4.copy(this.discInstances.matrices[ndx], matrix);
+    });
+
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.discInstances.buffer);
+    this.gl.bufferSubData(this.gl.ARRAY_BUFFER, 0, this.discInstances.matricesArray);
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
+
+    this.smoothRotationVelocity = this.control.rotationVelocity;
+  }
+
+  private render(): void {
+    if (!this.gl || !this.discProgram) return;
+    const gl = this.gl;
+
+    gl.useProgram(this.discProgram);
+    gl.enable(gl.CULL_FACE);
+    gl.enable(gl.DEPTH_TEST);
+
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    gl.uniformMatrix4fv(this.discLocations.uWorldMatrix, false, this.worldMatrix);
+    gl.uniformMatrix4fv(this.discLocations.uViewMatrix, false, this.camera.matrices.view);
+    gl.uniformMatrix4fv(this.discLocations.uProjectionMatrix, false, this.camera.matrices.projection);
+    gl.uniform3f(
+      this.discLocations.uCameraPosition,
+      this.camera.position[0],
+      this.camera.position[1],
+      this.camera.position[2]
+    );
+    gl.uniform4f(
+      this.discLocations.uRotationAxisVelocity,
+      this.control.rotationAxis[0],
+      this.control.rotationAxis[1],
+      this.control.rotationAxis[2],
+      this.smoothRotationVelocity * 1.1
+    );
+
+    gl.uniform1i(this.discLocations.uItemCount, this.items.length);
+    gl.uniform1i(this.discLocations.uAtlasSize, this.atlasSize);
+
+    gl.uniform1f(this.discLocations.uFrames, this._frames);
+    gl.uniform1f(this.discLocations.uScaleFactor, this.scaleFactor);
+
+    gl.uniform1i(this.discLocations.uTex, 0);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, this.tex);
+
+    gl.bindVertexArray(this.discVAO);
+    gl.drawElementsInstanced(
+      gl.TRIANGLES,
+      this.discBuffers.indices.length,
+      gl.UNSIGNED_SHORT,
+      0,
+      this.DISC_INSTANCE_COUNT
+    );
+    gl.bindVertexArray(null);
+  }
+
+  private updateCameraMatrix(): void {
+    mat4.targetTo(this.camera.matrix, this.camera.position, [0, 0, 0], this.camera.up);
+    mat4.invert(this.camera.matrices.view, this.camera.matrix);
+  }
+
+  private updateProjectionMatrix(): void {
+    if (!this.gl) return;
+    const canvasEl = this.gl.canvas as HTMLCanvasElement;
+    this.camera.aspect = canvasEl.clientWidth / canvasEl.clientHeight;
+    const height = this.SPHERE_RADIUS * 0.35;
+    const distance = this.camera.position[2];
+    if (this.camera.aspect > 1) {
+      this.camera.fov = 2 * Math.atan(height / distance);
+    } else {
+      this.camera.fov = 2 * Math.atan(height / this.camera.aspect / distance);
+    }
+    mat4.perspective(
+      this.camera.matrices.projection,
+      this.camera.fov,
+      this.camera.aspect,
+      this.camera.near,
+      this.camera.far
+    );
+    mat4.invert(this.camera.matrices.inversProjection, this.camera.matrices.projection);
+  }
+
+  private onControlUpdate(deltaTime: number): void {
+    const timeScale = deltaTime / this.TARGET_FRAME_DURATION + 0.0001;
+    let damping = 5 / timeScale;
+    let cameraTargetZ = 3;
+
+    const isMoving = this.control.isPointerDown || Math.abs(this.smoothRotationVelocity) > 0.01;
+
+    if (isMoving !== this.movementActive) {
+      this.movementActive = isMoving;
+      this.onMovementChange(isMoving);
+    }
+
+    if (!this.control.isPointerDown) {
+      const nearestVertexIndex = this.findNearestVertexIndex();
+      const itemIndex = nearestVertexIndex % Math.max(1, this.items.length);
+      this.onActiveItemChange(itemIndex);
+      const snapDirection = vec3.normalize(vec3.create(), this.getVertexWorldPosition(nearestVertexIndex));
+      this.control.snapTargetDirection = snapDirection;
+    } else {
+      cameraTargetZ += this.control.rotationVelocity * 80 + 2.5;
+      damping = 7 / timeScale;
+    }
+
+    this.camera.position[2] += (cameraTargetZ - this.camera.position[2]) / damping;
+    this.updateCameraMatrix();
+  }
+
+  private findNearestVertexIndex(): number {
+    const n = this.control.snapDirection;
+    const inversOrientation = quat.conjugate(quat.create(), this.control.orientation);
+    const nt = vec3.transformQuat(vec3.create(), n, inversOrientation);
+
+    let maxD = -1;
+    let nearestVertexIndex = 0;
+    for (let i = 0; i < this.instancePositions.length; ++i) {
+      const d = vec3.dot(nt, this.instancePositions[i]);
+      if (d > maxD) {
+        maxD = d;
+        nearestVertexIndex = i;
+      }
+    }
+    return nearestVertexIndex;
+  }
+
+  private getVertexWorldPosition(index: number): vec3 {
+    const nearestVertexPos = this.instancePositions[index];
+    return vec3.transformQuat(vec3.create(), nearestVertexPos, this.control.orientation);
+  }
+}
+
+const defaultItems: MenuItem[] = [
+  {
+    image: 'https://picsum.photos/900/900?grayscale',
+    link: 'https://google.com/',
+    title: '',
+    description: ''
+  }
+];
+
+interface InfiniteMenuProps {
+  items?: MenuItem[];
+}
+
+const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [] }) => {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null) as MutableRefObject<HTMLCanvasElement | null>;
+  const [activeItem, setActiveItem] = useState<MenuItem | null>(null);
+  const [isMoving, setIsMoving] = useState<boolean>(false);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    let sketch: InfiniteGridMenu | null = null;
+
+    const handleActiveItem = (index: number) => {
+      if (!items.length) return;
+      const itemIndex = index % items.length;
+      setActiveItem(items[itemIndex]);
+    };
+
+    if (canvas) {
+      sketch = new InfiniteGridMenu(canvas, items.length ? items : defaultItems, handleActiveItem, setIsMoving, sk =>
+        sk.run()
+      );
+    }
+
+    const handleResize = () => {
+      if (sketch) {
+        sketch.resize();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [items]);
+
+  const handleButtonClick = () => {
+    if (!activeItem?.link) return;
+    if (activeItem.link.startsWith('http')) {
+      window.open(activeItem.link, '_blank');
+    } else {
+      console.log('Internal route:', activeItem.link);
+    }
+  };
+
+  return (
+    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <canvas id="infinite-grid-menu-canvas" ref={canvasRef} />
+
+      {activeItem && (
+        <>
+          <h2 className={`face-title ${isMoving ? 'inactive' : 'active'}`}>{activeItem.title}</h2>
+
+          <p className={`face-description ${isMoving ? 'inactive' : 'active'}`}>{activeItem.description}</p>
+
+          <div onClick={handleButtonClick} className={`action-button ${isMoving ? 'inactive' : 'active'}`}>
+            <p className="action-button-icon">&#x2197;</p>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default InfiniteMenu;
+
+/* Note: this CSS is only an example, you can overlay whatever you want using the activeItem logic */
+
+#infinite-grid-menu-canvas {
+  cursor: grab;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  outline: none;
+}
+
+#infinite-grid-menu-canvas:active {
+  cursor: grabbing;
+}
+
+.action-button {
+  position: absolute;
+  left: 50%;
+  z-index: 10;
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  background: #5227ff;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 5px solid #000;
+}
+
+.face-title {
+  user-select: none;
+  position: absolute;
+  font-weight: 900;
+  font-size: 3rem;
+  left: 1.6em;
+  top: 50%;
+}
+
+.action-button-icon {
+  user-select: none;
+  position: relative;
+  color: #fff;
+  top: 2px;
+  font-size: 26px;
+}
+
+.face-title {
+  position: absolute;
+  top: 50%;
+  transform: translate(20%, -50%);
+}
+
+.face-title.active {
+  opacity: 1;
+  transform: translate(20%, -50%);
+  pointer-events: auto;
+  transition: 0.5s ease;
+}
+
+.face-title.inactive {
+  pointer-events: none;
+  opacity: 0;
+  transition: 0.1s ease;
+}
+
+.face-description {
+  user-select: none;
+  position: absolute;
+  max-width: 10ch;
+  top: 50%;
+  font-size: 1.2rem;
+  right: 1%;
+  transform: translate(0, -50%);
+}
+
+.face-description.active {
+  opacity: 1;
+  transform: translate(-90%, -50%);
+  pointer-events: auto;
+  transition: 0.5s ease;
+}
+
+.face-description.inactive {
+  pointer-events: none;
+  transform: translate(-60%, -50%);
+  opacity: 0;
+  transition: 0.1s ease;
+}
+
+.action-button {
+  position: absolute;
+  left: 50%;
+}
+
+.action-button.active {
+  bottom: 3.8em;
+  transform: translateX(-50%) scale(1);
+  opacity: 1;
+  pointer-events: auto;
+  transition: 0.5s ease;
+}
+
+.action-button.inactive {
+  bottom: -80px;
+  transform: translateX(-50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+  transition: 0.1s ease;
+}
+
+@media (max-width: 1500px) {
+  .face-title,
+  .face-description {
+    display: none;
+  }
+}
+

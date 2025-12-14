@@ -1,0 +1,299 @@
+.scroll-stack-scroller {
+  position: relative;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.scroll-stack-inner {
+  padding: 0 2rem 30vh; /* Further reduced for tighter spacing */
+  min-height: auto;
+}
+
+.scroll-stack-card-wrapper {
+  position: relative;
+}
+
+.scroll-stack-card {
+  transform-origin: top center;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  height: auto;
+  min-height: 18rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 15px auto; /* Further reduced spacing */
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+  
+  /* Smooth text rendering - prevent jitter */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  
+  /* Enhanced glow effect */
+  box-shadow: 
+    0 0 40px rgba(255, 255, 255, 0.08),
+    0 0 80px rgba(255, 255, 255, 0.04),
+    0 0 120px rgba(255, 255, 255, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-stack-card:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 0 60px rgba(255, 255, 255, 0.15),
+    0 0 120px rgba(255, 255, 255, 0.08),
+    0 0 200px rgba(255, 255, 255, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
+  transform: translateY(-3px) !important;
+}
+
+/* Enhanced glow border animation */
+.scroll-stack-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 22px;
+  background: linear-gradient(45deg, 
+    rgba(255, 255, 255, 0.2), 
+    rgba(255, 255, 255, 0.05), 
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.2)
+  );
+  background-size: 200% 200%;
+  opacity: 0;
+  z-index: -1;
+  animation: borderGlow 3s ease-in-out infinite;
+  transition: opacity 0.4s ease;
+}
+
+.scroll-stack-card:hover::before {
+  opacity: 1;
+}
+
+@keyframes borderGlow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Pulsing glow effect */
+.scroll-stack-card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  z-index: -1;
+  transition: all 0.4s ease;
+}
+
+.scroll-stack-card:hover::after {
+  transform: translate(-50%, -50%) scale(1.2);
+  opacity: 1;
+}
+
+/* Enhanced thunder effect on category badge */
+.achievement-category {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.achievement-category::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.6), 
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.scroll-stack-card:hover .achievement-category::before {
+  left: 100%;
+}
+
+.scroll-stack-card:hover .achievement-category {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+/* Lightning bolt effect */
+.achievement-icon {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.achievement-icon::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border-radius: 12px;
+  background: linear-gradient(45deg, 
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  opacity: 0;
+  animation: lightning 2s ease-in-out infinite;
+  z-index: -1;
+}
+
+.scroll-stack-card:hover .achievement-icon::after {
+  opacity: 1;
+}
+
+@keyframes lightning {
+  0%, 90%, 100% {
+    opacity: 0;
+  }
+  5%, 10% {
+    opacity: 1;
+  }
+  15%, 20% {
+    opacity: 0;
+  }
+  25%, 30% {
+    opacity: 1;
+  }
+}
+
+.scroll-stack-end {
+  width: 100%;
+  height: 30vh; /* Further reduced for tighter spacing */
+}
+
+/* Hide scrollbars globally */
+html {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Achievements specific styling */
+.scroll-stack-achievements .scroll-stack-inner {
+  padding: 0 2rem 40vh; /* Further reduced spacing */
+}
+
+/* Smooth text transforms - prevent jitter */
+.scroll-stack-card h3,
+.scroll-stack-card p,
+.scroll-stack-card span,
+.scroll-stack-card div {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Additional text stability */
+.scroll-stack-card * {
+  will-change: auto;
+  transform-style: preserve-3d;
+}
+
+@media (max-width: 768px) {
+  .scroll-stack-inner {
+    padding: 0 1rem 25vh;
+  }
+  
+  .scroll-stack-card {
+    padding: 1.5rem;
+    margin: 10px auto;
+    min-height: 14rem;
+  }
+  
+  .scroll-stack-achievements .scroll-stack-inner {
+    padding: 0 1rem 30vh;
+  }
+  
+  .scroll-stack-end {
+    height: 20vh;
+  }
+}
+
+/* Particle effect on hover */
+.scroll-stack-card:hover {
+  animation: cardPulse 2s ease-in-out infinite;
+}
+
+@keyframes cardPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 60px rgba(255, 255, 255, 0.15),
+      0 0 120px rgba(255, 255, 255, 0.08),
+      0 0 200px rgba(255, 255, 255, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 0 20px rgba(255, 255, 255, 0.05);
+  }
+  50% {
+    box-shadow: 
+      0 0 80px rgba(255, 255, 255, 0.2),
+      0 0 160px rgba(255, 255, 255, 0.12),
+      0 0 240px rgba(255, 255, 255, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 0 30px rgba(255, 255, 255, 0.08);
+  }
+}
+
+/* Smooth scroll behavior */
+.scroll-stack-scroller {
+  scroll-behavior: smooth;
+}
+
+/* Performance optimizations */
+.scroll-stack-card {
+  contain: layout style paint;
+  isolation: isolate;
+}
